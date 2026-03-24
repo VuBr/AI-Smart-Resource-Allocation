@@ -1,0 +1,52 @@
+{
+  "$schema": "https://raw.githubusercontent.com/anthropics/claude-code/main/schemas/settings.schema.json",
+  "_comment": "Claude Code settings for AI-Smart-Resource-Allocation. Established Phase 0-A 2026-03-24.",
+  "permissions": {
+    "deny": [
+      "Bash(rm -rf*)",
+      "Bash(git reset --hard*)",
+      "Bash(git push --force*)",
+      "Bash(git push -f *)",
+      "Bash(git push -f)",
+      "Bash(mkfs*)",
+      "Bash(dd if=*)",
+      "Bash(shred*)",
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(**/*secret*)",
+      "Read(**/*credential*)",
+      "Read(**/*password*)",
+      "Read(**/*api_key*)",
+      "Read(**/*apikey*)",
+      "Read(**/*.pem)",
+      "Read(**/*.p12)",
+      "Read(**/*.keystore)",
+      "Read(**/id_rsa)",
+      "Read(**/id_ed25519)",
+      "Read(**/*.pfx)",
+      "Read(**/*.key)",
+      "Write(**/.env)",
+      "Write(**/.env.*)",
+      "Write(**/*secret*)",
+      "Write(**/*credential*)",
+      "Write(**/*password*)",
+      "Write(**/*api_key*)",
+      "Write(**/*apikey*)",
+      "Write(**/*.pem)",
+      "Write(**/*.p12)",
+      "Write(**/*.keystore)",
+      "Write(**/id_rsa)",
+      "Write(**/id_ed25519)",
+      "Write(**/*.pfx)",
+      "Write(**/*.key)"
+    ],
+    "ask": [
+      "Bash(git push*)",
+      "Bash(git tag*)",
+      "Bash(npm publish*)",
+      "Bash(pip publish*)",
+      "Bash(docker push*)"
+    ],
+    "allow": []
+  }
+}
