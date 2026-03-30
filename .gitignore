@@ -1,0 +1,67 @@
+# Node
+node_modules/
+.next/
+dist/
+build/
+.turbo/
+*.tsbuildinfo
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+.eggs/
+.venv/
+venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+htmlcov/
+.coverage
+*.cover
+
+# Environment — NEVER commit
+.env
+.env.*
+.env.local
+.env.production
+.env.development
+
+# Secrets
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore
+id_rsa
+id_ed25519
+*secret*
+*credential*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Docker
+.docker/
+
+# Alembic
+apps/api/alembic/versions/*.py
+!apps/api/alembic/versions/.gitkeep
+
+# Next.js
+apps/web/.next/
+apps/web/out/
+
+# Logs
+*.log
+logs/
