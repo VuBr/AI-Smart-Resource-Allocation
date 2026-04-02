@@ -61,3 +61,37 @@ async def test_confirm_allocation_valid_returns_201(client):
     assert response.status_code == 201
     body = response.json()
     assert body["percentage"] == 50
+
+
+# --- IT: GET /allocations/recommendations/{project_id} (C-10) ---
+
+@pytest.mark.asyncio
+async def test_get_recommendations_returns_200(client):
+    """GET /recommendations/{project_id} với project_id tồn tại → 200."""
+    # Tạo project trước
+    import io
+    csv_content = b"name,description,status\nTest Project,Desc,active\n"
+    await client.post(
+        "/api/v1/projects/upload",
+        files={"file": ("projects.csv", io.BytesIO(csv_content), "text/csv")},
+    )
+    projects = (await client.get("/api/v1/projects")).json()
+
+    if len(projects) > 0:
+        project_id = projects[0]["id"]
+        resp = await client.get(f"/api/v1/allocations/recommendations/{project_id}")
+        assert resp.status_code == 200
+        body = resp.json()
+        assert "recommendations" in body
+        assert isinstance(body["recommendations"], list)
+
+
+@pytest.mark.asyncio
+async def test_get_recommendations_invalid_project_returns_404(client):
+    """GET /recommendations/{non_existent_id} → 404."""
+    non_existent = "00000000-0000-0000-0000-000000000099"
+    resp = await client.get(f"/api/v1/allocations/recommendations/{non_existent}")
+    assert resp.status_code == 404
+    body = resp.json()
+    assert "error" in body
+    assert body["error"]["code"] == "ProjectNotFound"
