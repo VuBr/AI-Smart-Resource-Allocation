@@ -2,7 +2,7 @@
 
 **Loại:** Living Document
 **Nguồn gốc:** Trích từ `docs/changes/RA-001/Raw/source-base-architecture.md` (authority: HIGHEST)
-**Cập nhật lần cuối:** Phase 2 — RA-001 (2026-03-25)
+**Cập nhật lần cuối:** Phase 9 — RA-001 (2026-04-03)
 
 ---
 
@@ -22,7 +22,8 @@ Hệ thống theo mô hình **đa tầng (multi-layer)**:
 ## 2. Tech Stack Chính thức
 
 ### Frontend
-- **Next.js** (App Router)
+- **Next.js 15** (App Router)
+- **Node.js ≥ 20.9.0** (required by Next.js 15 — Docker image: `node:20-alpine`)
 - **TypeScript** (strict mode)
 - **TailwindCSS**
 - **shadcn/ui**
@@ -239,14 +240,17 @@ Chi tiết: xem `docs/changes/RA-001/Raw/source-base-repo-structure.md`
 
 ## 12. Môi trường Local Development
 
-| Service | Port |
-|---------|------|
-| Next.js (web) | 3000 |
-| FastAPI (api) | 8000 |
-| PostgreSQL | 5432 |
-| Redis | 6379 |
+| Service | Port (container) | Port (host / localhost) |
+|---------|-----------------|------------------------|
+| Next.js (web) | 3000 | 3000 |
+| FastAPI (api) | 8000 | 8000 |
+| PostgreSQL | 5432 | **5433** (mapped — 5432 thường bị chiếm trên host) |
+| Redis | 6379 | 6379 |
 
 Khởi động: `docker compose up`
+
+> **Ghi chú kết nối PostgreSQL từ host:** dùng port **5433** (`psql -p 5433`).
+> Trong container, các services vẫn communicate qua `postgres:5432` như bình thường.
 
 ---
 

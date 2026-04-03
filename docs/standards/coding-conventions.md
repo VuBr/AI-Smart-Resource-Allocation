@@ -2,7 +2,7 @@
 
 **Loại:** Living Document
 **Nguồn gốc:** Trích từ `docs/changes/RA-001/Raw/ai-build-instructions.md` + `source-base-architecture.md`
-**Cập nhật lần cuối:** Phase 2 — RA-001 (2026-03-25)
+**Cập nhật lần cuối:** Phase 9 — RA-001 (2026-04-03)
 
 ---
 
@@ -87,7 +87,7 @@ Tất cả error response phải theo format thống nhất:
 | `allocation_generated` | Sau khi tạo recommendations | `project_id`, `candidate_count` |
 | `allocation_confirmed` | Sau khi confirm allocation | `engineer_id`, `project_id` |
 | `llm_score_computed` | Sau mỗi LLM scoring | `engineer_id`, `project_id`, `provider` |
-| `csv_import_started` | Khi bắt đầu xử lý CSV | `filename`, `size` |
+| `csv_import_started` | Khi bắt đầu xử lý CSV | `entity_type`, `file_size_bytes` |
 | `csv_import_completed` | Sau khi import thành công | `inserted`, `updated`, `skipped`, `errors` |
 | `csv_import_failed` | Khi import thất bại | `filename`, `error` |
 
@@ -102,7 +102,7 @@ Tất cả error response phải theo format thống nhất:
 
 ### Type Hints
 - **Bắt buộc** trên tất cả `public function signatures` trong service và router modules.
-- Dùng `Optional[T]` thay vì `T | None` để tương thích Python 3.9+.
+- Python version confirmed **3.11** — `T | None` union syntax (Python 3.10+) là acceptable. `Optional[T]` cũng valid nhưng không bắt buộc dùng vì compat.
 
 ### Service Layer Pattern
 ```python
@@ -154,7 +154,9 @@ async def predict_bench(engineer):
 | Backend Unit Tests | pytest | `apps/api/tests/` |
 | Backend Integration Tests | pytest + httpx | `apps/api/tests/` |
 | Frontend Unit Tests | Jest | `apps/web/__tests__/` hoặc cạnh component |
-| E2E Tests | Docker Compose + manual/script | Per milestone |
+| E2E Tests | **Playwright** (Chromium) | `apps/web/e2e/` |
+
+> Playwright đã được thêm vào `package.json` từ Phase 6. Chạy `npx playwright install chromium` lần đầu.
 
 **Naming:**
 - Backend: `test_<function_or_scenario>.py`
@@ -167,12 +169,14 @@ async def predict_bench(engineer):
 | Gate | Command | Tiêu chí |
 |------|---------|---------|
 | Frontend lint | `eslint .` | 0 errors |
-| Frontend format | `prettier --check .` | 0 differences |
 | Frontend type check | `tsc --noEmit` | 0 errors |
+| Frontend build | `next build` | 0 errors, 0 warnings |
 | Backend lint | `ruff check .` | 0 errors |
 | Backend format | `black --check .` | 0 differences |
-| Backend type check | mypy hoặc type hints đầy đủ | Không thiếu type hint |
 | Backend tests | `pytest` | All pass |
+
+> **Không dùng Prettier** — không có trong stack (confirmed Phase 5). Format frontend qua ESLint rules.
+> **Không dùng mypy** — type hint coverage được verify qua `ruff check` + code review.
 
 ---
 
