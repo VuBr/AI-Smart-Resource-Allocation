@@ -1,64 +1,57 @@
 "use client";
 
-import Link from "next/link";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { AppShell } from "@/components/layout/AppShell";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { listProjects } from "@/lib/services/projects";
+import { ProjectFilterTabs, type ProjectTab } from "@/features/projects/ProjectFilterTabs";
+import { ProjectsTable } from "@/features/projects/ProjectsTable";
+
+const breadcrumbs = [
+  { label: "ResourceAI" },
+  { label: "Workspace" },
+  { label: "Projects", active: true },
+];
+
+function TableSkeleton() {
+  return (
+    <div className="rounded-2xl bg-white border border-slate-200/80 shadow-sm overflow-hidden">
+      <div className="px-6 py-4 border-b border-slate-100">
+        <div className="h-4 w-24 bg-slate-200 rounded animate-pulse mb-1" />
+        <div className="h-3 w-64 bg-slate-100 rounded animate-pulse" />
+      </div>
+      <div className="divide-y divide-slate-100">
+        {[...Array(5)].map((_, i) => (
+          <div key={i} className="px-6 py-4 h-14 animate-pulse bg-white" />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function ProjectsPage() {
   useAuthGuard();
+  const [tab, setTab] = useState<ProjectTab>("all");
+
   const { data: projects = [], isLoading } = useQuery({
     queryKey: ["projects"],
     queryFn: listProjects,
   });
 
+  const filtered = tab === "all" ? projects : projects.filter((p) => p.status === tab);
+
   return (
-    <AppShell>
-      <h2 className="text-xl font-semibold mb-6">Projects</h2>
-      {isLoading ? (
-        <div className="space-y-2">
-          {[...Array(3)].map((_, i) => (
-            <div key={i} className="h-12 bg-gray-200 rounded animate-pulse" />
-          ))}
-        </div>
-      ) : (
-        <div className="bg-white rounded shadow overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="text-left px-4 py-3">Name</th>
-                <th className="text-left px-4 py-3">Skills</th>
-                <th className="text-left px-4 py-3">Headcount</th>
-                <th className="text-left px-4 py-3">Status</th>
-                <th className="text-left px-4 py-3"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {projects.map((p) => (
-                <tr key={p.id} className="border-t">
-                  <td className="px-4 py-3">{p.name}</td>
-                  <td className="px-4 py-3">{p.required_skills ?? "—"}</td>
-                  <td className="px-4 py-3">{p.headcount}</td>
-                  <td className="px-4 py-3 capitalize">{p.status}</td>
-                  <td className="px-4 py-3">
-                    <Link href={`/projects/${p.id}`} className="text-blue-600 hover:underline">
-                      View
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-              {projects.length === 0 && (
-                <tr>
-                  <td colSpan={5} className="px-4 py-8 text-center text-gray-400">
-                    No projects found.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      )}
+    <AppShell breadcrumbs={breadcrumbs} title="Project Portfolio">
+      <div className="px-6 py-7 space-y-6">
+        <ProjectFilterTabs active={tab} onChange={setTab} />
+
+        {isLoading ? (
+          <TableSkeleton />
+        ) : (
+          <ProjectsTable projects={filtered} total={projects.length} />
+        )}
+      </div>
     </AppShell>
   );
 }
