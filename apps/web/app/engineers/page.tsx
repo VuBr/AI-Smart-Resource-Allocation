@@ -1,64 +1,102 @@
 "use client";
 
-import Link from "next/link";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { AppShell } from "@/components/layout/AppShell";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { listEngineers } from "@/lib/services/engineers";
+import { EngineerStatsBar } from "@/features/engineers/EngineerStatsBar";
+import { EngineersTable } from "@/features/engineers/EngineersTable";
+
+const breadcrumbs = [
+  { label: "ResourceAI" },
+  { label: "Workspace" },
+  { label: "Engineers", active: true },
+];
+
+function EngineersHeaderSlot({ search, onSearchChange }: { search: string; onSearchChange: (v: string) => void }) {
+  const router = useRouter();
+  return (
+    <>
+      {/* Search */}
+      <div className="relative">
+        <svg className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+        </svg>
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => onSearchChange(e.target.value)}
+          placeholder="Search engineers…"
+          className="h-9 w-56 rounded-xl border border-slate-200 bg-white pl-9 pr-3 text-sm text-slate-700 placeholder-slate-400 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/20 transition-colors"
+        />
+      </div>
+
+      {/* Import Data */}
+      <button
+        onClick={() => router.push("/upload")}
+        className="flex items-center gap-x-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 hover:border-slate-300 hover:bg-slate-50 transition-colors"
+      >
+        <svg className="h-4 w-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+        </svg>
+        Import Data
+      </button>
+    </>
+  );
+}
 
 export default function EngineersPage() {
   useAuthGuard();
+  const [search, setSearch] = useState("");
+
   const { data: engineers = [], isLoading } = useQuery({
     queryKey: ["engineers"],
     queryFn: listEngineers,
   });
 
+  const filtered = search.trim()
+    ? engineers.filter(
+        (e) =>
+          e.name.toLowerCase().includes(search.toLowerCase()) ||
+          e.primary_skill.toLowerCase().includes(search.toLowerCase())
+      )
+    : engineers;
+
   return (
-    <AppShell>
-      <h2 className="text-xl font-semibold mb-6">Engineers</h2>
-      {isLoading ? (
-        <div className="space-y-2">
-          {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-12 bg-gray-200 rounded animate-pulse" />
-          ))}
-        </div>
-      ) : (
-        <div className="bg-white rounded shadow overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="text-left px-4 py-3">Name</th>
-                <th className="text-left px-4 py-3">Skill</th>
-                <th className="text-left px-4 py-3">Level</th>
-                <th className="text-left px-4 py-3">Availability</th>
-                <th className="text-left px-4 py-3"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {engineers.map((e) => (
-                <tr key={e.id} className="border-t">
-                  <td className="px-4 py-3">{e.name}</td>
-                  <td className="px-4 py-3">{e.primary_skill}</td>
-                  <td className="px-4 py-3 capitalize">{e.level}</td>
-                  <td className="px-4 py-3">{e.availability_percentage}%</td>
-                  <td className="px-4 py-3">
-                    <Link href={`/engineers/${e.id}`} className="text-blue-600 hover:underline">
-                      View
-                    </Link>
-                  </td>
-                </tr>
+    <AppShell
+      breadcrumbs={breadcrumbs}
+      title="Team Roster"
+      headerSlot={<EngineersHeaderSlot search={search} onSearchChange={setSearch} />}
+    >
+      <div className="px-6 py-7 space-y-6">
+        {isLoading ? (
+          <div className="flex items-center gap-x-3">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="h-11 w-36 rounded-xl bg-white border border-slate-200 animate-pulse" />
+            ))}
+          </div>
+        ) : (
+          <EngineerStatsBar engineers={engineers} />
+        )}
+
+        {isLoading ? (
+          <div className="rounded-2xl bg-white border border-slate-200/80 shadow-sm overflow-hidden">
+            <div className="px-6 py-4 border-b border-slate-100">
+              <div className="h-4 w-32 bg-slate-200 rounded animate-pulse mb-1" />
+              <div className="h-3 w-64 bg-slate-100 rounded animate-pulse" />
+            </div>
+            <div className="divide-y divide-slate-100">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="px-6 py-4 h-14 bg-white animate-pulse" />
               ))}
-              {engineers.length === 0 && (
-                <tr>
-                  <td colSpan={5} className="px-4 py-8 text-center text-gray-400">
-                    No engineers found. Upload a CSV to get started.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      )}
+            </div>
+          </div>
+        ) : (
+          <EngineersTable engineers={filtered} />
+        )}
+      </div>
     </AppShell>
   );
 }

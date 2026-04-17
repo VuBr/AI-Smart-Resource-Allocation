@@ -27,6 +27,8 @@ function SectionSkeleton({ className = "" }: { className?: string }) {
   return <div className={`rounded-2xl bg-white border border-slate-200/80 animate-pulse ${className}`} />;
 }
 
+const breadcrumbs = [{ label: "ResourceAI" }, { label: "Dashboard", active: true }];
+
 export default function DashboardPage() {
   useAuthGuard();
 
@@ -51,7 +53,7 @@ export default function DashboardPage() {
   });
 
   return (
-    <AppShell>
+    <AppShell breadcrumbs={breadcrumbs} title="Overview">
       <div className="px-6 py-7 space-y-6">
         {/* Section heading */}
         <div className="flex items-center justify-between">
