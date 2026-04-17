@@ -99,3 +99,18 @@ export interface ShortageItem {
   available: number;
   gap: number;
 }
+
+export interface AllocationDetail {
+  id: string;
+  engineer_id: string;
+  engineer_name: string;
+  engineer_level: EngineerLevel;
+  engineer_skill: string;
+  project_id: string;
+  project_name: string;
+  project_status: ProjectStatus;
+  percentage: number;
+  status: AllocationStatus;
+  start_date: string | null;
+  end_date: string | null;
+}

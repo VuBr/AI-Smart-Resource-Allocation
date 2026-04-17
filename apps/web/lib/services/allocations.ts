@@ -1,5 +1,5 @@
 import apiClient from "@/lib/api-client";
-import type { Allocation, RecommendationResponse } from "@/types";
+import type { Allocation, AllocationDetail, RecommendationResponse } from "@/types";
 
 export async function recommend(projectId: string): Promise<RecommendationResponse> {
   const { data } = await apiClient.post<RecommendationResponse>(
@@ -29,5 +29,10 @@ export async function confirmAllocation(body: {
 
 export async function getActiveAllocations(): Promise<Allocation[]> {
   const { data } = await apiClient.get<Allocation[]>("/api/v1/allocations/active");
+  return data;
+}
+
+export async function getActiveAllocationsDetail(): Promise<AllocationDetail[]> {
+  const { data } = await apiClient.get<AllocationDetail[]>("/api/v1/allocations/active?detail=true");
   return data;
 }
