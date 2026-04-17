@@ -2,50 +2,47 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { AppShell } from "@/components/layout/AppShell";
+import type { BreadcrumbItem } from "@/components/layout/AppShell";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { getShortage } from "@/lib/services/reports";
+import { SkillGapAlertBanner } from "@/features/reports/SkillGapAlertBanner";
+import { SkillStatCards } from "@/features/reports/SkillStatCards";
+import { SkillCoverageTable } from "@/features/reports/SkillCoverageTable";
+
+const breadcrumbs: BreadcrumbItem[] = [
+  { label: "ResourceAI" },
+  { label: "Analytics" },
+  { label: "Reports", active: true },
+];
 
 export default function ReportsPage() {
   useAuthGuard();
+
   const { data: shortage = [], isLoading } = useQuery({
     queryKey: ["shortage"],
     queryFn: getShortage,
   });
 
+  const gapItems = shortage.filter((s) => s.gap > 0);
+  const gapSkillNames = gapItems.map((s) => s.skill);
+
   return (
-    <AppShell>
-      <h2 className="text-xl font-semibold mb-6">Skill Shortage Report</h2>
+    <AppShell breadcrumbs={breadcrumbs} title="Skill Shortage Analysis">
       {isLoading ? (
-        <div className="h-32 bg-gray-200 rounded animate-pulse" />
-      ) : (
-        <div className="bg-white rounded shadow overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="text-left px-4 py-3">Skill</th>
-                <th className="text-left px-4 py-3">Required</th>
-                <th className="text-left px-4 py-3">Available</th>
-                <th className="text-left px-4 py-3">Gap</th>
-              </tr>
-            </thead>
-            <tbody>
-              {shortage.map((s, i) => (
-                <tr key={i} className="border-t">
-                  <td className="px-4 py-3">{s.skill}</td>
-                  <td className="px-4 py-3">{s.required}</td>
-                  <td className="px-4 py-3">{s.available}</td>
-                  <td className={`px-4 py-3 font-medium ${s.gap > 0 ? "text-red-600" : "text-green-600"}`}>
-                    {s.gap > 0 ? `+${s.gap}` : s.gap}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <div className="p-4 border-t">
-            <button className="text-sm text-gray-400 border rounded px-3 py-1" disabled>
-              Export (placeholder)
-            </button>
+        <div className="space-y-4">
+          <div className="h-16 rounded-2xl bg-white animate-pulse" />
+          <div className="grid grid-cols-3 gap-4">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="h-24 rounded-2xl bg-white animate-pulse" />
+            ))}
           </div>
+          <div className="h-64 rounded-2xl bg-white animate-pulse" />
+        </div>
+      ) : (
+        <div className="space-y-6">
+          <SkillGapAlertBanner gapCount={gapItems.length} skillNames={gapSkillNames} />
+          <SkillStatCards items={shortage} />
+          <SkillCoverageTable items={shortage} />
         </div>
       )}
     </AppShell>
