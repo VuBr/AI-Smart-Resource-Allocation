@@ -6,7 +6,7 @@ interface RecentAllocationsTableProps {
 }
 
 function initials(name: string) {
-  return name
+  return (name ?? "")
     .split(" ")
     .map((n) => n[0])
     .join("")
