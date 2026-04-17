@@ -2,7 +2,12 @@
 
 **Loại:** Living Document
 **Nguồn gốc:** Trích từ `docs/changes/RA-001/Raw/source-base-architecture.md` (authority: HIGHEST)
-**Cập nhật lần cuối:** Phase 9 — RA-001 (2026-04-03)
+**Cập nhật lần cuối:** Phase 0-B (2026-04-09)
+
+**Tài liệu liên quan:**
+- Luồng nghiệp vụ chính → xem `docs/architecture/key-flows.md`
+- Domain model chi tiết → xem `docs/architecture/domain-model.md`
+- Coding conventions → xem `docs/standards/coding-conventions.md`
 
 ---
 

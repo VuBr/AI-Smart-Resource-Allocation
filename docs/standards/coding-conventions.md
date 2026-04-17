@@ -2,7 +2,12 @@
 
 **Loại:** Living Document
 **Nguồn gốc:** Trích từ `docs/changes/RA-001/Raw/ai-build-instructions.md` + `source-base-architecture.md`
-**Cập nhật lần cuối:** Phase 9 — RA-001 (2026-04-03)
+**Cập nhật lần cuối:** Phase 0-B (2026-04-09)
+
+**Tài liệu liên quan:**
+- Testing conventions → xem `docs/standards/testing.md`
+- Security conventions → xem `docs/standards/security.md`
+- Rules ngắn gọn → xem `.claude/rules/10-style.md`, `.claude/rules/20-architecture.md`
 
 ---
 
@@ -17,6 +22,7 @@
 | TypeScript React components | `PascalCase` | `EngineerCard`, `AllocationTable` |
 | TypeScript files (components) | `PascalCase.tsx` | `EngineerCard.tsx` |
 | TypeScript files (non-component) | `kebab-case.ts` | `api-client.ts`, `use-engineers.ts` |
+| TypeScript custom hooks (file) | `camelCase.ts` bắt đầu bằng `use` | `useAuthGuard.ts`, `useEngineers.ts` |
 | URL paths | `kebab-case` | `/bench-forecast`, `/engineers/[id]` |
 | Database tables | `snake_case` (plural) | `engineers`, `match_scores`, `bench_forecasts` |
 | Environment variables | `UPPER_SNAKE_CASE` | `BENCH_ALERT_DAYS_THRESHOLD`, `JWT_SECRET` |
@@ -140,10 +146,32 @@ async def predict_bench(engineer):
 - Service modules trong `lib/services/` — một file per domain
 - Dùng `@tanstack/react-query` cho data fetching
 
+### Khi nào dùng UI Components (`components/ui/`) vs Native HTML
+
+`components/ui/` (Button, Input, Label) dùng `@base-ui/react` với style defaults riêng.
+Dùng UI components khi style cần nhất quán với design system (forms CRUD thông thường).
+Dùng **native HTML** (`<button>`, `<input>`, `<label>`) khi:
+- Style từ design spec có nhiều override lớn (`rounded-xl`, `py-3`, custom padding icon) conflict với defaults của component
+- Component được dùng trong một layout brand-specific độc lập (như login page)
+
+Evidence: RA-002 — `Button` (`@base-ui/react/button`) có default `rounded-lg h-8` conflict với login template `rounded-xl py-3`; `Input` có `h-8 px-2.5` conflict với `py-3 pl-10`.
+Quyết định: dùng native `<button>/<input>/<label>` + Tailwind classes trực tiếp.
+
 ### Auth Guard
 - Tất cả authenticated routes phải check token ở client-side
 - Redirect về `/login` nếu không có token
 - `/login` phải accessible mà không cần auth
+
+### "use client" Directive
+- Bắt buộc thêm `"use client"` ở đầu file khi component dùng: `useState`, `useEffect`, `useRouter`, `useQuery`, event handlers (`onClick`, `onChange`, v.v.)
+- Server Components (không có directive) chỉ dùng cho static/layout pages
+- Evidence: `apps/web/app/login/page.tsx` line 1, `apps/web/app/engineers/page.tsx` line 1
+
+### Path Alias
+- Dùng `@/*` thay vì relative path `../../` khi import xuyên thư mục
+- Config tại `apps/web/tsconfig.json` — `"@/*": ["./*"]`
+- Ví dụ: `import { listEngineers } from "@/lib/services/engineers"` ✅
+- Ví dụ: `import { listEngineers } from "../../../lib/services/engineers"` ❌
 
 ---
 
