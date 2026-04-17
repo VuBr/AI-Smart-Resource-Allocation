@@ -1,65 +1,68 @@
 "use client";
 
-import { useState } from "react";
 import { AppShell } from "@/components/layout/AppShell";
+import type { BreadcrumbItem } from "@/components/layout/AppShell";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { uploadEngineers } from "@/lib/services/engineers";
 import { uploadProjects } from "@/lib/services/projects";
-import type { CsvImportResult } from "@/types";
+import { UploadZone } from "@/features/upload/UploadZone";
+import { CsvColumnReference } from "@/features/upload/CsvColumnReference";
 
-function UploadForm({
-  label,
-  onUpload,
-}: {
-  label: string;
-  onUpload: (file: File) => Promise<CsvImportResult>;
-}) {
-  const [result, setResult] = useState<CsvImportResult | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setLoading(true);
-    setError(null);
-    setResult(null);
-    try {
-      const res = await onUpload(file);
-      setResult(res);
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Upload failed";
-      setError(msg);
-    } finally {
-      setLoading(false);
-      e.target.value = "";
-    }
-  }
-
-  return (
-    <div className="bg-white rounded shadow p-6">
-      <h3 className="font-semibold mb-3">{label}</h3>
-      <input type="file" accept=".csv" onChange={handleChange} disabled={loading} className="text-sm" />
-      {loading && <p className="mt-2 text-sm text-gray-400">Uploading...</p>}
-      {error && <p className="mt-2 text-sm text-red-500">{error}</p>}
-      {result && (
-        <div className="mt-3 text-sm">
-          <p>Inserted: {result.inserted} | Updated: {result.updated} | Skipped: {result.skipped}</p>
-          {result.errors.length > 0 && <p className="text-red-500">Errors: {result.errors.join(", ")}</p>}
-        </div>
-      )}
-    </div>
-  );
-}
+const breadcrumbs: BreadcrumbItem[] = [
+  { label: "ResourceAI" },
+  { label: "Upload Data", active: true },
+];
 
 export default function UploadPage() {
   useAuthGuard();
+
   return (
-    <AppShell>
-      <h2 className="text-xl font-semibold mb-6">Upload Data</h2>
+    <AppShell breadcrumbs={breadcrumbs} title="Data Import">
       <div className="space-y-6">
-        <UploadForm label="Upload Engineers CSV" onUpload={uploadEngineers} />
-        <UploadForm label="Upload Projects CSV" onUpload={uploadProjects} />
+        {/* Info banner */}
+        <div className="rounded-2xl border border-blue-200 bg-blue-50 px-5 py-4">
+          <div className="flex items-start gap-x-3">
+            <svg className="h-5 w-5 text-blue-500 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+            </svg>
+            <div className="flex-1">
+              <p className="text-sm font-bold text-blue-800">CSV Format Guidelines</p>
+              <div className="mt-2 grid grid-cols-2 gap-x-8 gap-y-1 text-xs text-blue-700">
+                <div>
+                  <p className="font-bold text-blue-800 mb-1">Engineers CSV — required columns:</p>
+                  <p>
+                    <code className="font-mono bg-blue-100 rounded px-1">employee_id</code>,{" "}
+                    <code className="font-mono bg-blue-100 rounded px-1">name</code>,{" "}
+                    <code className="font-mono bg-blue-100 rounded px-1">email</code>,{" "}
+                    <code className="font-mono bg-blue-100 rounded px-1">level</code>,{" "}
+                    <code className="font-mono bg-blue-100 rounded px-1">skills</code>,{" "}
+                    <code className="font-mono bg-blue-100 rounded px-1">department</code>
+                  </p>
+                </div>
+                <div>
+                  <p className="font-bold text-blue-800 mb-1">Projects CSV — required columns:</p>
+                  <p>
+                    <code className="font-mono bg-blue-100 rounded px-1">project_id</code>,{" "}
+                    <code className="font-mono bg-blue-100 rounded px-1">name</code>,{" "}
+                    <code className="font-mono bg-blue-100 rounded px-1">status</code>,{" "}
+                    <code className="font-mono bg-blue-100 rounded px-1">start_date</code>,{" "}
+                    <code className="font-mono bg-blue-100 rounded px-1">end_date</code>,{" "}
+                    <code className="font-mono bg-blue-100 rounded px-1">required_skills</code>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Upload zones */}
+        <div className="grid grid-cols-2 gap-6">
+          <UploadZone type="engineers" onUpload={uploadEngineers} />
+          <UploadZone type="projects" onUpload={uploadProjects} />
+        </div>
+
+        {/* CSV column reference */}
+        <CsvColumnReference />
       </div>
     </AppShell>
   );
