@@ -2,56 +2,50 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { AppShell } from "@/components/layout/AppShell";
+import type { BreadcrumbItem } from "@/components/layout/AppShell";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { getForecast } from "@/lib/services/bench";
+import { BenchRiskSummary } from "@/features/bench-forecast/BenchRiskSummary";
+import { BenchForecastTable } from "@/features/bench-forecast/BenchForecastTable";
+
+const breadcrumbs: BreadcrumbItem[] = [
+  { label: "ResourceAI" },
+  { label: "Analytics" },
+  { label: "Bench Forecast", active: true },
+];
+
+const aiAccuracyChip = (
+  <div className="hidden items-center gap-x-1.5 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-600 sm:flex">
+    <svg className="h-3.5 w-3.5 text-indigo-500" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+    </svg>
+    AI Model · 89.2% accuracy
+  </div>
+);
 
 export default function BenchForecastPage() {
   useAuthGuard();
+
   const { data: forecasts = [], isLoading } = useQuery({
     queryKey: ["bench-forecast"],
     queryFn: getForecast,
   });
 
   return (
-    <AppShell>
-      <h2 className="text-xl font-semibold mb-6">Bench Forecast</h2>
+    <AppShell breadcrumbs={breadcrumbs} title="AI-Powered Predictions" headerSlot={aiAccuracyChip}>
       {isLoading ? (
-        <div className="space-y-2">
-          {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-10 bg-gray-200 rounded animate-pulse" />
-          ))}
+        <div className="space-y-4">
+          <div className="grid grid-cols-3 gap-4">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="h-20 rounded-2xl bg-white animate-pulse" />
+            ))}
+          </div>
+          <div className="h-64 rounded-2xl bg-white animate-pulse" />
         </div>
       ) : (
-        <div className="bg-white rounded shadow overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="text-left px-4 py-3">Engineer</th>
-                <th className="text-left px-4 py-3">Risk Level</th>
-                <th className="text-left px-4 py-3">Probability</th>
-                <th className="text-left px-4 py-3">Days Until Bench</th>
-                <th className="text-left px-4 py-3">Alert</th>
-              </tr>
-            </thead>
-            <tbody>
-              {forecasts.map((f) => (
-                <tr key={f.engineer_id} className="border-t">
-                  <td className="px-4 py-3">{f.engineer_name}</td>
-                  <td className="px-4 py-3 capitalize">{f.risk_level}</td>
-                  <td className="px-4 py-3">{(f.probability * 100).toFixed(0)}%</td>
-                  <td className="px-4 py-3">{f.days_until_bench ?? "—"}</td>
-                  <td className="px-4 py-3">{f.is_alert ? "⚠ Yes" : "No"}</td>
-                </tr>
-              ))}
-              {forecasts.length === 0 && (
-                <tr>
-                  <td colSpan={5} className="px-4 py-8 text-center text-gray-400">
-                    No forecast data.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+        <div className="space-y-6">
+          <BenchRiskSummary items={forecasts} />
+          <BenchForecastTable items={forecasts} />
         </div>
       )}
     </AppShell>
