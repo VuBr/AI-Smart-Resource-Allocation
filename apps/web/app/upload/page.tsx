@@ -18,7 +18,7 @@ export default function UploadPage() {
 
   return (
     <AppShell breadcrumbs={breadcrumbs} title="Data Import">
-      <div className="space-y-6">
+      <div className="px-6 py-7 space-y-6">
         {/* Info banner */}
         <div className="rounded-2xl border border-blue-200 bg-blue-50 px-5 py-4">
           <div className="flex items-start gap-x-3">

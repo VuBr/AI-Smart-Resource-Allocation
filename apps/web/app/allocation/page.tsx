@@ -75,7 +75,7 @@ export default function AllocationPage() {
 
   return (
     <AppShell breadcrumbs={breadcrumbs} title="Resource Allocation">
-      <div className="space-y-6">
+      <div className="px-6 py-7 space-y-6">
         {/* Project selector */}
         <ProjectSelectorBar
           projects={projects}

@@ -29,7 +29,7 @@ export default function ReportsPage() {
   return (
     <AppShell breadcrumbs={breadcrumbs} title="Skill Shortage Analysis">
       {isLoading ? (
-        <div className="space-y-4">
+        <div className="px-6 py-7 space-y-6">
           <div className="h-16 rounded-2xl bg-white animate-pulse" />
           <div className="grid grid-cols-3 gap-4">
             {[...Array(3)].map((_, i) => (
@@ -39,7 +39,7 @@ export default function ReportsPage() {
           <div className="h-64 rounded-2xl bg-white animate-pulse" />
         </div>
       ) : (
-        <div className="space-y-6">
+        <div className="px-6 py-7 space-y-6">
           <SkillGapAlertBanner gapCount={gapItems.length} skillNames={gapSkillNames} />
           <SkillStatCards items={shortage} />
           <SkillCoverageTable items={shortage} />
