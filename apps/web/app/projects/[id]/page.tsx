@@ -53,7 +53,7 @@ export default function ProjectDetailPage() {
   return (
     <AppShell breadcrumbs={breadcrumbs} title="Project Detail" headerSlot={headerSlot}>
       {isLoading ? (
-        <div className="space-y-4">
+        <div className="px-6 py-7 space-y-6">
           <div className="h-40 rounded-2xl bg-white animate-pulse" />
           <div className="grid grid-cols-3 gap-6">
             <div className="col-span-2 h-64 rounded-2xl bg-white animate-pulse" />
@@ -62,7 +62,7 @@ export default function ProjectDetailPage() {
           <div className="h-48 rounded-2xl bg-white animate-pulse" />
         </div>
       ) : project ? (
-        <div className="space-y-6">
+        <div className="px-6 py-7 space-y-6">
           <ProjectOverviewBanner project={project} />
           <div className="grid grid-cols-3 gap-6">
             <ProjectDetailsCard project={project} allocations={projectAllocations} />
