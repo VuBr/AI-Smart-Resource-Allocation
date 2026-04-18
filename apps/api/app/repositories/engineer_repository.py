@@ -23,3 +23,26 @@ class EngineerRepository:
         await self.db.commit()
         await self.db.refresh(engineer)
         return engineer
+
+    async def upsert_by_email(self, data: dict) -> tuple[Engineer, bool]:
+        """
+        Insert nếu email chưa tồn tại, Update nếu đã tồn tại.
+        Returns (engineer, inserted) — inserted=True nếu INSERT, False nếu UPDATE.
+        Optional fields bỏ trống sẽ overwrite DB thành None.
+        """
+        result = await self.db.execute(select(Engineer).where(Engineer.email == data["email"]))
+        existing = result.scalar_one_or_none()
+
+        if existing is not None:
+            for key, value in data.items():
+                setattr(existing, key, value)
+            await self.db.flush()
+            await self.db.refresh(existing)
+            await self.db.commit()
+            return existing, False
+
+        engineer = Engineer(**data)
+        self.db.add(engineer)
+        await self.db.commit()
+        await self.db.refresh(engineer)
+        return engineer, True

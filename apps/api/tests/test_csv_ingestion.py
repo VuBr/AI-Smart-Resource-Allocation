@@ -1,7 +1,7 @@
 """
 Tests for CSVIngestionService.
 - Stub-level tests (UT): MIME + size validation — dùng mock UploadFile, không cần DB
-- Integration tests (IT): parse_projects_csv — dùng fixture `client` (in-memory SQLite)
+- Integration tests (IT): parse_projects_csv + parse_engineers_csv — dùng fixture `client` (in-memory SQLite)
 """
 
 from unittest.mock import AsyncMock, MagicMock
@@ -18,6 +18,11 @@ VALID_HEADER = (
     b"name,description,required_skills,required_level,headcount,status,start_date,end_date\n"
 )
 
+ENGINEER_VALID_HEADER = (
+    b"name,email,primary_skill,secondary_skills,level,"
+    b"years_of_experience,availability_percentage,bench_start_date\n"
+)
+
 
 def _make_upload_file(content: bytes, content_type: str, filename: str = "test.csv"):
     """Tạo UploadFile mock. Dùng MagicMock vì UploadFile.content_type là read-only property."""
@@ -32,6 +37,10 @@ def _projects_upload(content: bytes, content_type: str = "text/csv"):
     return {"file": ("projects.csv", content, content_type)}
 
 
+def _engineers_upload(content: bytes, content_type: str = "text/csv"):
+    return {"file": ("engineers.csv", content, content_type)}
+
+
 # ---------------------------------------------------------------------------
 # Unit tests — MIME / size (không cần DB, giữ nguyên từ Phase 5)
 # ---------------------------------------------------------------------------
@@ -43,7 +52,7 @@ async def test_invalid_mime_type_raises_value_error():
     service = CSVIngestionService()
     upload = _make_upload_file(b'{"key": "value"}', "application/json", "test.json")
     with pytest.raises(ValueError, match="invalid_mime_type"):
-        await service.parse_engineers_csv(upload)
+        await service.parse_engineers_csv(upload, db=None)  # type: ignore[arg-type]
 
 
 @pytest.mark.asyncio
@@ -53,16 +62,19 @@ async def test_file_over_10mb_raises_overflow_error():
     big_content = b"x" * (10 * 1024 * 1024 + 1)
     upload = _make_upload_file(big_content, "text/csv")
     with pytest.raises(OverflowError, match="file_too_large"):
-        await service.parse_engineers_csv(upload)
+        await service.parse_engineers_csv(upload, db=None)  # type: ignore[arg-type]
 
 
 @pytest.mark.asyncio
-async def test_valid_csv_returns_result_dict():
+async def test_valid_csv_returns_result_dict(client):
     """CSV hợp lệ ≤10MB → trả về dict có đủ keys: inserted, updated, skipped, errors."""
-    service = CSVIngestionService()
     csv_content = b"name,email,primary_skill,level\nAlice,alice@example.com,Python,senior\n"
-    upload = _make_upload_file(csv_content, "text/csv")
-    result = await service.parse_engineers_csv(upload)
+    response = await client.post(
+        "/api/v1/engineers/upload",
+        files=_engineers_upload(csv_content),
+    )
+    assert response.status_code == 200
+    result = response.json()
     assert "inserted" in result
     assert "updated" in result
     assert "skipped" in result
@@ -70,13 +82,15 @@ async def test_valid_csv_returns_result_dict():
 
 
 @pytest.mark.asyncio
-async def test_application_csv_mime_is_accepted():
+async def test_application_csv_mime_is_accepted(client):
     """'application/csv' MIME type cũng được chấp nhận (không chỉ text/csv)."""
-    service = CSVIngestionService()
-    csv_content = b"name,email\nBob,bob@example.com\n"
-    upload = _make_upload_file(csv_content, "application/csv")
-    result = await service.parse_engineers_csv(upload)
-    assert "inserted" in result
+    csv_content = b"name,email,primary_skill,level\nBob,bob@example.com,Go,mid\n"
+    response = await client.post(
+        "/api/v1/engineers/upload",
+        files=_engineers_upload(csv_content, content_type="application/csv"),
+    )
+    assert response.status_code == 200
+    assert "inserted" in response.json()
 
 
 @pytest.mark.asyncio

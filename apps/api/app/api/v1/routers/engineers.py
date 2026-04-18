@@ -15,10 +15,10 @@ router = APIRouter()
 
 
 @router.post("/upload", status_code=status.HTTP_200_OK)
-async def upload_engineers(file: UploadFile) -> dict:
+async def upload_engineers(file: UploadFile, db: AsyncSession = Depends(get_db)) -> dict:
     service = CSVIngestionService()
     try:
-        result = await service.parse_engineers_csv(file)
+        result = await service.parse_engineers_csv(file, db)
         return result
     except OverflowError:
         raise HTTPException(
@@ -27,7 +27,25 @@ async def upload_engineers(file: UploadFile) -> dict:
                 error=ErrorDetail(code="FileTooLarge", message="File exceeds maximum allowed size")
             ).model_dump(),
         )
-    except ValueError:
+    except ValueError as e:
+        msg = str(e)
+        if msg == "invalid_encoding":
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=ErrorResponse(
+                    error=ErrorDetail(code="InvalidEncoding", message="File must be UTF-8 encoded")
+                ).model_dump(),
+            )
+        if msg == "invalid_csv_header":
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=ErrorResponse(
+                    error=ErrorDetail(
+                        code="InvalidCsvHeader",
+                        message="Missing required columns: name, email, primary_skill, level",
+                    )
+                ).model_dump(),
+            )
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=ErrorResponse(

@@ -5,15 +5,14 @@ interface ColumnRow {
 }
 
 const engineerColumns: ColumnRow[] = [
-  { name: "employee_id", example: "e.g. ENG-0001", required: true },
-  { name: "full_name", example: "e.g. Linh Nguyen", required: true },
-  { name: "email", example: "e.g. linh@company.io", required: true },
-  { name: "level", example: "junior / mid / senior / lead", required: true },
-  { name: "skills", example: "semicolon-separated", required: true },
-  { name: "department", example: "e.g. AI & Data Science", required: true },
-  { name: "manager", example: "manager name", required: false },
-  { name: "joined_date", example: "YYYY-MM-DD", required: false },
-  { name: "location", example: "city, country", required: false },
+  { name: "name",                    example: "e.g. Nguyen Van A",             required: true  },
+  { name: "email",                   example: "e.g. a@company.io",             required: true  },
+  { name: "primary_skill",           example: "e.g. Python",                   required: true  },
+  { name: "level",                   example: "junior / mid / senior / lead",  required: true  },
+  { name: "secondary_skills",        example: 'e.g. "Django,FastAPI"',         required: false },
+  { name: "years_of_experience",     example: "number e.g. 5 (default: 0)",    required: false },
+  { name: "availability_percentage", example: "0–100 e.g. 80 (default: 100)", required: false },
+  { name: "bench_start_date",        example: "YYYY-MM-DD",                    required: false },
 ];
 
 const projectColumns: ColumnRow[] = [

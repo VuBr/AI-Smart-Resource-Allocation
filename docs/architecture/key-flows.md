@@ -2,7 +2,7 @@
 
 **Loại:** Living Document
 **Nguồn gốc:** Phase 0-B (2026-04-09)
-**Cập nhật lần cuối:** Phase 0-B (2026-04-09)
+**Cập nhật lần cuối:** RA-013 (2026-04-18)
 
 > Tài liệu này mô tả bộ khung các luồng chính. Chi tiết endpoint → `docs/architecture/system-overview.md §5`.
 > Domain entities → `docs/architecture/domain-model.md`.
@@ -68,9 +68,15 @@ Browser                    Next.js (FE)             FastAPI (BE)          Postgr
   │                            │ ───────────────────────►│                     │
   │                            │                         │ validate MIME type  │
   │                            │                         │ validate size ≤10MB │
-  │                            │                         │ parse CSV (Pandas)  │
-  │                            │                         │ validate schema     │
-  │                            │                         │ (Pydantic)          │
+  │                            │                         │ decode UTF-8-SIG    │
+  │                            │                         │ validate header     │
+  │                            │                         │ (name,email,        │
+  │                            │                         │  primary_skill,     │
+  │                            │                         │  level required)    │
+  │                            │                         │ track seen_emails   │
+  │                            │                         │ parse rows          │
+  │                            │                         │ validate each row   │
+  │                            │                         │ (EngineerCsvRow)    │
   │                            │                         │ upsert by email     │
   │                            │                         │ ───────────────────►│
   │                            │                         │ ◄─────────────────── │
@@ -82,16 +88,39 @@ Browser                    Next.js (FE)             FastAPI (BE)          Postgr
   │ ◄───────────────────────── │                         │                     │
 ```
 
-**Kết quả:** Engineers được upsert vào DB. Response trả về count {inserted, updated, skipped, errors}.
+**Kết quả:** Engineers được upsert vào DB. Response trả về `{inserted, updated, skipped, errors}`.
+
+**Upsert key:** `email` (exact match, case-sensitive). Duplicate email → UPDATE, không INSERT thêm.
 
 **Xử lý lỗi:**
-- File > 10MB → `413 Payload Too Large`
-- MIME không phải `text/csv` → `400 Bad Request`
-- Row không hợp lệ → đưa vào `errors[]`, không rollback toàn bộ
+- File > 10MB → `413 Payload Too Large`, `code: "FileTooLarge"`
+- MIME không phải CSV → `400 Bad Request`, `code: "InvalidCsv"`
+- File không decode được UTF-8 → `400 Bad Request`, `code: "InvalidEncoding"`
+- Header thiếu `name`/`email`/`primary_skill`/`level` → `400 Bad Request`, `code: "InvalidCsvHeader"`
+- Duplicate email trong file → row sau bị skip, đưa vào `errors[]`
+- Row không hợp lệ → đưa vào `errors[]` với format `"Row {N}: {field} — {reason}"`, không rollback
+
+**Field rules tóm tắt:**
+
+| Column | Required | Default | Constraint |
+|--------|----------|---------|-----------|
+| `name` | Yes | — | max 200 chars |
+| `email` | Yes | — | valid email format, unique per file |
+| `primary_skill` | Yes | — | max 100 chars |
+| `level` | Yes | — | junior/mid/senior/lead |
+| `secondary_skills` | No | null | max 500 chars |
+| `years_of_experience` | No | 0 | >= 0 |
+| `availability_percentage` | No | 100 | 0–100 inclusive |
+| `bench_start_date` | No | null | YYYY-MM-DD |
+
+> **Lưu ý upsert optional fields:** Nếu field optional bỏ trống trong CSV → overwrite DB thành `null` / default (không giữ giá trị cũ).
 
 **Evidence:**
-- Service: `apps/api/app/services/csv_ingestion.py`
-- Router: `apps/api/app/api/v1/routers/engineers.py` — `POST /upload`
+- Service: `apps/api/app/services/csv_ingestion.py` — `parse_engineers_csv()` (RA-013 replaces stub)
+- Router: `apps/api/app/api/v1/routers/engineers.py` — `POST /api/v1/engineers/upload`
+- Repository: `apps/api/app/repositories/engineer_repository.py` — `upsert_by_email()` (RA-013 adds)
+- Schema: `apps/api/app/schemas/engineer.py` — `EngineerCsvRow` (RA-013 adds)
+- Frontend: `apps/web/features/upload/CsvColumnReference.tsx` — `engineerColumns` (RA-013 rewrites)
 
 ---
 

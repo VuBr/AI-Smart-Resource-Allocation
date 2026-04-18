@@ -31,12 +31,10 @@ export default function UploadPage() {
                 <div>
                   <p className="font-bold text-blue-800 mb-1">Engineers CSV — required columns:</p>
                   <p>
-                    <code className="font-mono bg-blue-100 rounded px-1">employee_id</code>,{" "}
                     <code className="font-mono bg-blue-100 rounded px-1">name</code>,{" "}
                     <code className="font-mono bg-blue-100 rounded px-1">email</code>,{" "}
-                    <code className="font-mono bg-blue-100 rounded px-1">level</code>,{" "}
-                    <code className="font-mono bg-blue-100 rounded px-1">skills</code>,{" "}
-                    <code className="font-mono bg-blue-100 rounded px-1">department</code>
+                    <code className="font-mono bg-blue-100 rounded px-1">primary_skill</code>,{" "}
+                    <code className="font-mono bg-blue-100 rounded px-1">level</code>
                   </p>
                 </div>
                 <div>
