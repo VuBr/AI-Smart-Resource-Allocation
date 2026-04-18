@@ -17,15 +17,14 @@ const engineerColumns: ColumnRow[] = [
 ];
 
 const projectColumns: ColumnRow[] = [
-  { name: "project_id", example: "e.g. PRJ-0015", required: true },
-  { name: "project_name", example: "e.g. Project Helios", required: true },
-  { name: "status", example: "active / completed / on_hold", required: true },
-  { name: "start_date", example: "YYYY-MM-DD", required: true },
-  { name: "end_date", example: "YYYY-MM-DD", required: true },
-  { name: "required_skills", example: "semicolon-separated", required: true },
-  { name: "required_level", example: "junior / mid / senior / lead", required: false },
-  { name: "client", example: 'client or "Internal"', required: false },
-  { name: "allocation_slots", example: "number e.g. 3", required: false },
+  { name: "name",            example: "e.g. AI Platform Modernization",  required: true  },
+  { name: "description",     example: "short project description",        required: false },
+  { name: "required_skills", example: 'e.g. "Python,ML,Data"',           required: false },
+  { name: "required_level",  example: "junior / mid / senior / lead",    required: false },
+  { name: "headcount",       example: "number e.g. 3 (default: 1)",      required: false },
+  { name: "status",          example: "planned / active / closed",        required: false },
+  { name: "start_date",      example: "YYYY-MM-DD",                      required: false },
+  { name: "end_date",        example: "YYYY-MM-DD",                      required: false },
 ];
 
 function ColumnTable({ columns }: { columns: ColumnRow[] }) {

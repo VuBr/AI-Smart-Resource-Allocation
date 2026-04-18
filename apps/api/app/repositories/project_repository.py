@@ -23,3 +23,26 @@ class ProjectRepository:
         await self.db.commit()
         await self.db.refresh(project)
         return project
+
+    async def upsert_by_name(self, data: dict) -> tuple[Project, bool]:
+        """
+        Insert nếu name chưa tồn tại, Update nếu đã tồn tại.
+        Returns (project, inserted) — inserted=True nếu INSERT, False nếu UPDATE.
+        Optional fields bỏ trống sẽ overwrite DB thành None.
+        """
+        result = await self.db.execute(select(Project).where(Project.name == data["name"]))
+        existing = result.scalar_one_or_none()
+
+        if existing is not None:
+            for key, value in data.items():
+                setattr(existing, key, value)
+            await self.db.flush()
+            await self.db.refresh(existing)
+            await self.db.commit()
+            return existing, False
+
+        project = Project(**data)
+        self.db.add(project)
+        await self.db.commit()
+        await self.db.refresh(project)
+        return project, True

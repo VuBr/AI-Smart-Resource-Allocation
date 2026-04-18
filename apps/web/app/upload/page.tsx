@@ -40,14 +40,17 @@ export default function UploadPage() {
                   </p>
                 </div>
                 <div>
-                  <p className="font-bold text-blue-800 mb-1">Projects CSV — required columns:</p>
+                  <p className="font-bold text-blue-800 mb-1">Projects CSV — columns:</p>
                   <p>
-                    <code className="font-mono bg-blue-100 rounded px-1">project_id</code>,{" "}
-                    <code className="font-mono bg-blue-100 rounded px-1">name</code>,{" "}
+                    <code className="font-mono bg-blue-100 rounded px-1">name</code>{" "}
+                    <span className="text-red-500 font-bold">*</span>,{" "}
+                    <code className="font-mono bg-blue-100 rounded px-1">description</code>,{" "}
+                    <code className="font-mono bg-blue-100 rounded px-1">required_skills</code>,{" "}
+                    <code className="font-mono bg-blue-100 rounded px-1">required_level</code>,{" "}
+                    <code className="font-mono bg-blue-100 rounded px-1">headcount</code>,{" "}
                     <code className="font-mono bg-blue-100 rounded px-1">status</code>,{" "}
                     <code className="font-mono bg-blue-100 rounded px-1">start_date</code>,{" "}
-                    <code className="font-mono bg-blue-100 rounded px-1">end_date</code>,{" "}
-                    <code className="font-mono bg-blue-100 rounded px-1">required_skills</code>
+                    <code className="font-mono bg-blue-100 rounded px-1">end_date</code>
                   </p>
                 </div>
               </div>

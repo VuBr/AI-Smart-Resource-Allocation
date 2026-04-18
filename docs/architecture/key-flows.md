@@ -242,6 +242,76 @@ Browser                    Next.js (FE)             FastAPI (BE)          Postgr
 
 ---
 
+## Luồng 6 — Import Project qua CSV (RA-012)
+
+**Actor:** Manager / Admin
+**Pre-condition:** Đã đăng nhập, có file CSV hợp lệ (UTF-8, ≤ 10MB, header đúng)
+
+```
+Browser                    Next.js (FE)             FastAPI (BE)          PostgreSQL
+  │                            │                         │                     │
+  │  GET /upload               │                         │                     │
+  │ ─────────────────────────► │ render UploadPage       │                     │
+  │ ◄───────────────────────── │                         │                     │
+  │                            │                         │                     │
+  │  chọn file CSV             │                         │                     │
+  │  submit FormData           │                         │                     │
+  │ ─────────────────────────► │                         │                     │
+  │                            │ POST /api/v1/projects/  │                     │
+  │                            │ upload (multipart)      │                     │
+  │                            │ ───────────────────────►│                     │
+  │                            │                         │ validate MIME type  │
+  │                            │                         │ validate size ≤10MB │
+  │                            │                         │ decode UTF-8        │
+  │                            │                         │ validate header     │
+  │                            │                         │ (must have "name")  │
+  │                            │                         │ parse rows          │
+  │                            │                         │ validate each row   │
+  │                            │                         │ upsert by name      │
+  │                            │                         │ ───────────────────►│
+  │                            │                         │ ◄─────────────────── │
+  │                            │  200 {inserted,         │                     │
+  │                            │   updated,skipped,      │                     │
+  │                            │   errors[]}             │                     │
+  │                            │ ◄─────────────────────── │                     │
+  │  hiện kết quả import       │                         │                     │
+  │ ◄───────────────────────── │                         │                     │
+```
+
+**Kết quả:** Projects được upsert vào DB. Response trả về `{inserted, updated, skipped, errors}`.
+
+**Upsert key:** `name` (exact match, case-sensitive). Duplicate name → UPDATE, không INSERT thêm.
+
+**Xử lý lỗi:**
+- File > 10MB → `413 Payload Too Large`, `code: "FileTooLarge"`
+- MIME không phải CSV → `400 Bad Request`, `code: "InvalidCsv"`
+- File không decode được UTF-8 → `400 Bad Request`, `code: "InvalidEncoding"`
+- Header thiếu cột `name` → `400 Bad Request`, `code: "InvalidCsvHeader"`
+- Row không hợp lệ → đưa vào `errors[]` với format `"Row {N}: {field} — {reason}"`, không rollback toàn bộ
+
+**Field rules tóm tắt:**
+
+| Column | Required | Default | Constraint |
+|--------|----------|---------|-----------|
+| `name` | Yes | — | max 200 chars |
+| `description` | No | null | max 1000 chars |
+| `required_skills` | No | null | max 500 chars |
+| `required_level` | No | null | junior/mid/senior/lead |
+| `headcount` | No | 1 | > 0 |
+| `status` | No | planned | planned/active/closed |
+| `start_date` | No | null | YYYY-MM-DD |
+| `end_date` | No | null | YYYY-MM-DD, ≥ start_date |
+
+> **Lưu ý upsert optional fields:** Nếu field optional bỏ trống trong CSV → overwrite DB thành `null` (không giữ giá trị cũ).
+
+**Evidence:**
+- Service: `apps/api/app/services/csv_ingestion.py` — `parse_projects_csv()` (RA-012 replaces stub)
+- Router: `apps/api/app/api/v1/routers/projects.py` — `POST /api/v1/projects/upload`
+- Repository: `apps/api/app/repositories/project_repository.py` — `upsert_by_name()` (RA-012 adds)
+- Frontend: `apps/web/app/upload/page.tsx`, `apps/web/features/upload/UploadZone.tsx`
+
+---
+
 ## Tóm tắt Cross-Cutting Concerns
 
 | Concern | Cơ chế | Evidence |
