@@ -12,10 +12,11 @@ class Settings(BaseSettings):
 
     # LLM (stub in Phase 5)
     OPENAI_API_KEY: str = ""
-    LLM_PROVIDER: str = "stub"
-    LLM_MODEL: str = "stub-v0"
+    GEMINI_API_KEY: str = ""    
+    LLM_PROVIDER: str = "gemini"
+    LLM_MODEL: str = "gemini-1.5-flash"
     LLM_MAX_TOKENS: int = 2048
-    LLM_TEMPERATURE: float = 0.0
+    LLM_TEMPERATURE: float = 0.2
     LLM_CONCURRENCY: int = 10
 
     # JWT (stub in Phase 5)

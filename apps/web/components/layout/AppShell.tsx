@@ -4,6 +4,7 @@ import { Sidebar } from "./Sidebar";
 
 export interface BreadcrumbItem {
   label: string;
+  href?: string;
   active?: boolean;
 }
 
