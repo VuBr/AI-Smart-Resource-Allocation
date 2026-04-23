@@ -8,6 +8,7 @@ from app.models.project import Project
 from app.core.config import get_settings
 
 async def main():
+    
     service = LLMScoringService()
 
     engineer = Engineer(
