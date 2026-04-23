@@ -1,3 +1,4 @@
+import io
 import uuid
 
 import pytest
@@ -26,7 +27,7 @@ async def test_health_returns_ok(client):
 
 
 @pytest.mark.asyncio
-async def test_dashboard_stats_returns_mock_data(client):
+async def test_dashboard_stats_returns_kpi_fields(client):
     response = await client.get("/api/v1/dashboard/stats")
     assert response.status_code == 200
     body = response.json()
@@ -34,6 +35,57 @@ async def test_dashboard_stats_returns_mock_data(client):
     assert "engineers_on_bench" in body
     assert "active_projects" in body
     assert "allocation_rate_percentage" in body
+
+
+@pytest.mark.asyncio
+async def test_dashboard_stats_returns_real_aggregates(client):
+    engineers_csv = (
+        b"name,email,primary_skill,level,availability_percentage\n"
+        b"Engineer A,a@example.com,Python,senior,100\n"
+        b"Engineer B,b@example.com,React,mid,100\n"
+    )
+    projects_csv = (
+        b"name,description,status\n"
+        b"Project Active,Core project,active\n"
+        b"Project Planned,Future project,planned\n"
+    )
+
+    upload_engineers = await client.post(
+        "/api/v1/engineers/upload",
+        files={"file": ("engineers.csv", io.BytesIO(engineers_csv), "text/csv")},
+    )
+    assert upload_engineers.status_code == 200
+
+    upload_projects = await client.post(
+        "/api/v1/projects/upload",
+        files={"file": ("projects.csv", io.BytesIO(projects_csv), "text/csv")},
+    )
+    assert upload_projects.status_code == 200
+
+    engineers = (await client.get("/api/v1/engineers")).json()
+    projects = (await client.get("/api/v1/projects")).json()
+
+    engineer_a_id = next(e["id"] for e in engineers if e["name"] == "Engineer A")
+    active_project_id = next(p["id"] for p in projects if p["name"] == "Project Active")
+
+    confirm = await client.post(
+        "/api/v1/allocations/confirm",
+        json={
+            "engineer_id": engineer_a_id,
+            "project_id": active_project_id,
+            "percentage": 50,
+        },
+    )
+    assert confirm.status_code == 201
+
+    stats_response = await client.get("/api/v1/dashboard/stats")
+    assert stats_response.status_code == 200
+    stats = stats_response.json()
+
+    assert stats["total_engineers"] == 2
+    assert stats["engineers_on_bench"] == 1
+    assert stats["active_projects"] == 1
+    assert stats["allocation_rate_percentage"] == 25
 
 
 # --- IT: GET /engineers/{id}/bench-forecast (C-5) ---

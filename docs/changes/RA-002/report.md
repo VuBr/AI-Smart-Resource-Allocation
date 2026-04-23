@@ -109,3 +109,29 @@
 - **Thứ tự implement:** CP-1 ErrorAlert → CP-2 BrandPanel → CP-3 LoginForm → CP-4 LoginPage
 - **Pitfall:** Error state trong HTML (border đỏ password field) là demo UI — không implement
 - **Pitfall:** Kiểm tra tên icon `lucide-react` (Eye/EyeOff) trước khi import
+
+---
+
+## Update 2026-04-22 - Dashboard Stats API dung du lieu that
+
+**Yeu cau:** Bo mock data cho `GET /api/v1/dashboard/stats` va tinh KPI tu du lieu that trong DB theo bo tai lieu `docs/changes/RA-001`.
+
+### Pham vi da xu ly
+
+| Hang muc | File | Ket qua |
+|---------|------|---------|
+| Tao repository KPI dashboard | `apps/api/app/repositories/dashboard_repository.py` | DONE |
+| Chuyen router dashboard sang query DB that | `apps/api/app/api/v1/routers/dashboard.py` | DONE |
+| Bo sung IT test cho KPI thuc te | `apps/api/tests/test_bench.py` | DONE |
+
+### Logic KPI da ap dung
+
+- `total_engineers`: dem tong so engineer trong bang `engineers`.
+- `engineers_on_bench`: `total_engineers - so engineer co allocation active` (dua tren `allocations.status = "active"`).
+- `active_projects`: dem so project co `status = "active"`.
+- `allocation_rate_percentage`: `round(tong allocation % active / total_engineers)`, clamp trong [0, 100], tranh chia 0.
+
+### Trang thai verification
+
+- Da cap nhat test moi: `test_dashboard_stats_returns_real_aggregates`.
+- Chua the run test tren moi truong hien tai vi terminal khong co lenh Python/Pytest kha dung (`pytest`, `python`, `py` deu khong chay duoc).
