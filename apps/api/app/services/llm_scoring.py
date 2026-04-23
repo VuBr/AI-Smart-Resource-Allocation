@@ -162,37 +162,37 @@ class LLMScoringService:
         }
 
         prompt = f"""
-You are an AI that scores engineer-project matching.
+            You are an AI that scores engineer-project matching.
 
-You must return ONLY valid JSON.
-Do not wrap in markdown.
-Do not add explanation outside JSON.
+            You must return ONLY valid JSON.
+            Do not wrap in markdown.
+            Do not add explanation outside JSON.
 
-Scoring rules:
-- skill_match: float from 0.0 to 1.0
-- experience_match: float from 0.0 to 1.0
-- availability_match: float from 0.0 to 1.0
-- score: float from 0.0 to 1.0
-- explanation: short string
-- risk_notes: short string
+            Scoring rules:
+            - skill_match: float from 0.0 to 1.0
+            - experience_match: float from 0.0 to 1.0
+            - availability_match: float from 0.0 to 1.0
+            - score: float from 0.0 to 1.0
+            - explanation: short string
+            - risk_notes: short string
 
-Use the provided rule_based_baseline as a baseline.
-You may refine the scores slightly based on semantic matching between skills and project description.
-Do not radically change the baseline without strong reason.
+            Use the provided rule_based_baseline as a baseline.
+            You may refine the scores slightly based on semantic matching between skills and project description.
+            Do not radically change the baseline without strong reason.
 
-Input:
-{json.dumps(payload, ensure_ascii=False, default=str)}
+            Input:
+            {json.dumps(payload, ensure_ascii=False, default=str)}
 
-Return exactly this JSON shape:
-{{
-  "skill_match": 0.0,
-  "experience_match": 0.0,
-  "availability_match": 0.0,
-  "score": 0.0,
-  "explanation": "",
-  "risk_notes": ""
-}}
-""".strip()
+            Return exactly this JSON shape:
+            {{
+            "skill_match": 0.0,
+            "experience_match": 0.0,
+            "availability_match": 0.0,
+            "score": 0.0,
+            "explanation": "",
+            "risk_notes": ""
+            }}
+            """.strip()
 
         try:
             genai.configure(api_key=settings.GEMINI_API_KEY)
