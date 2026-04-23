@@ -1,6 +1,7 @@
 import uuid
 
 from fastapi import APIRouter, Depends, HTTPException, status
+from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.logging import log_event
@@ -20,18 +21,39 @@ from app.services.allocation_orchestrator import AllocationRecommendationOrchest
 router = APIRouter()
 
 
+class RecommendationRequest(BaseModel):
+    project_id: uuid.UUID
+
+
 @router.post("/recommend", response_model=RecommendationResponse)
 async def recommend_engineers(
-    body: dict, db: AsyncSession = Depends(get_db)
+    request: RecommendationRequest,
+    db: AsyncSession = Depends(get_db),
 ) -> RecommendationResponse:
-    project_id = uuid.UUID(str(body.get("project_id", "")))
+    repo = ProjectRepository(db)
+    project = await repo.get_by_id(request.project_id)
+    if not project:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=ErrorResponse(
+                error=ErrorDetail(
+                    code="ProjectNotFound",
+                    message=f"Project {request.project_id} not found",
+                )
+            ).model_dump(),
+        )
+
     orchestrator = AllocationRecommendationOrchestrator()
-    return await orchestrator.recommend_engineers(project_id)
+    return await orchestrator.recommend_engineers(
+        session=db,
+        project_id=request.project_id,
+    )
 
 
 @router.get("/recommendations/{project_id}", response_model=RecommendationResponse)
 async def get_recommendations(
-    project_id: uuid.UUID, db: AsyncSession = Depends(get_db)
+    project_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db),
 ) -> RecommendationResponse:
     repo = ProjectRepository(db)
     project = await repo.get_by_id(project_id)
@@ -39,22 +61,31 @@ async def get_recommendations(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=ErrorResponse(
-                error=ErrorDetail(code="ProjectNotFound", message=f"Project {project_id} not found")
+                error=ErrorDetail(
+                    code="ProjectNotFound",
+                    message=f"Project {project_id} not found",
+                )
             ).model_dump(),
         )
+
     orchestrator = AllocationRecommendationOrchestrator()
-    return await orchestrator.recommend_engineers(project_id)
+    return await orchestrator.recommend_engineers(
+        session=db,
+        project_id=project_id,
+    )
 
 
 @router.post(
-    "/confirm", response_model=AllocationConfirmResponse, status_code=status.HTTP_201_CREATED
+    "/confirm",
+    response_model=AllocationConfirmResponse,
+    status_code=status.HTTP_201_CREATED,
 )
 async def confirm_allocation(
-    request: AllocationConfirmRequest, db: AsyncSession = Depends(get_db)
+    request: AllocationConfirmRequest,
+    db: AsyncSession = Depends(get_db),
 ) -> AllocationConfirmResponse:
     alloc_repo = AllocationRepository(db)
 
-    # REAL: check allocation cap (100%)
     current_total = await alloc_repo.get_total_percentage(request.engineer_id)
     if current_total + request.percentage > 100:
         raise HTTPException(
@@ -76,11 +107,13 @@ async def confirm_allocation(
         status="active",
     )
     saved = await alloc_repo.create(allocation)
+
     log_event(
         "allocation_confirmed",
         engineer_id=str(request.engineer_id),
         project_id=str(request.project_id),
     )
+
     return AllocationConfirmResponse.model_validate(saved)
 
 
