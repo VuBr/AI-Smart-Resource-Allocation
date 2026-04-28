@@ -76,6 +76,7 @@ export interface BenchAlertItem {
 export interface DashboardStats {
   total_engineers: number;
   engineers_on_bench: number;
+  partially_available: number;
   active_projects: number;
   allocation_rate_percentage: number;
 }

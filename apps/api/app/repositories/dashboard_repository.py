@@ -35,3 +35,13 @@ class DashboardRepository:
             )
         )
         return int(result.scalar_one() or 0)
+
+    async def get_partially_available_engineers(self) -> int:
+        result = await self.db.execute(
+            select(func.count(Engineer.id)).where(
+                Engineer.availability_percentage > 0,
+                Engineer.availability_percentage < 100,
+                Engineer.bench_start_date.is_(None),
+            )
+        )
+        return int(result.scalar_one() or 0)

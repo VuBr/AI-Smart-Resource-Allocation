@@ -33,6 +33,7 @@ async def test_dashboard_stats_returns_kpi_fields(client):
     body = response.json()
     assert "total_engineers" in body
     assert "engineers_on_bench" in body
+    assert "partially_available" in body
     assert "active_projects" in body
     assert "allocation_rate_percentage" in body
 
@@ -41,7 +42,7 @@ async def test_dashboard_stats_returns_kpi_fields(client):
 async def test_dashboard_stats_returns_real_aggregates(client):
     engineers_csv = (
         b"name,email,primary_skill,level,availability_percentage\n"
-        b"Engineer A,a@example.com,Python,senior,100\n"
+        b"Engineer A,a@example.com,Python,senior,50\n"
         b"Engineer B,b@example.com,React,mid,100\n"
     )
     projects_csv = (
@@ -84,6 +85,7 @@ async def test_dashboard_stats_returns_real_aggregates(client):
 
     assert stats["total_engineers"] == 2
     assert stats["engineers_on_bench"] == 1
+    assert stats["partially_available"] == 1
     assert stats["active_projects"] == 1
     assert stats["allocation_rate_percentage"] == 25
 

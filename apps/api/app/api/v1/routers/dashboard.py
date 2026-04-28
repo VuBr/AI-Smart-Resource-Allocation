@@ -13,6 +13,7 @@ async def get_dashboard_stats(db: AsyncSession = Depends(get_db)) -> DashboardSt
     repo = DashboardRepository(db)
     total_engineers = await repo.get_total_engineers()
     allocated_engineers = await repo.get_allocated_engineers()
+    partially_available = await repo.get_partially_available_engineers()
     active_projects = await repo.get_active_projects()
     total_active_allocation = await repo.get_total_active_allocation_percentage()
 
@@ -25,6 +26,7 @@ async def get_dashboard_stats(db: AsyncSession = Depends(get_db)) -> DashboardSt
     return DashboardStats(
         total_engineers=total_engineers,
         engineers_on_bench=engineers_on_bench,
+        partially_available=partially_available,
         active_projects=active_projects,
         allocation_rate_percentage=allocation_rate_percentage,
     )

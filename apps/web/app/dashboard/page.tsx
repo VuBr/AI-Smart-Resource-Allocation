@@ -157,7 +157,7 @@ export default function DashboardPage() {
               <WorkforceUtilization
                 totalEngineers={stats.total_engineers}
                 onBench={stats.engineers_on_bench}
-                partiallyAvailable={0}
+                partiallyAvailable={stats.partially_available}
               />
             )}
             {projectsLoading ? (
