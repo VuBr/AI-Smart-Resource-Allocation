@@ -28,7 +28,9 @@ class AllocationConfirmResponse(BaseModel):
 class AllocationActiveItem(BaseModel):
     id: uuid.UUID
     engineer_id: uuid.UUID
+    engineer_name: str
     project_id: uuid.UUID
+    project_name: str
     percentage: int
     status: str
     start_date: date | None

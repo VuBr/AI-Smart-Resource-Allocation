@@ -4,15 +4,32 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.allocation import Allocation
+from app.models.engineer import Engineer
+from app.models.project import Project
 
 
 class AllocationRepository:
     def __init__(self, db: AsyncSession) -> None:
         self.db = db
 
-    async def get_active(self) -> list[Allocation]:
-        result = await self.db.execute(select(Allocation).where(Allocation.status == "active"))
-        return list(result.scalars().all())
+    async def get_active(self) -> list[dict]:
+        result = await self.db.execute(
+            select(
+                Allocation.id,
+                Allocation.engineer_id,
+                Engineer.name.label("engineer_name"),
+                Allocation.project_id,
+                Project.name.label("project_name"),
+                Allocation.percentage,
+                Allocation.status,
+                Allocation.start_date,
+                Allocation.end_date,
+            )
+            .join(Engineer, Engineer.id == Allocation.engineer_id)
+            .join(Project, Project.id == Allocation.project_id)
+            .where(Allocation.status == "active")
+        )
+        return [dict(row._mapping) for row in result.all()]
 
     async def create(self, allocation: Allocation) -> Allocation:
         self.db.add(allocation)
