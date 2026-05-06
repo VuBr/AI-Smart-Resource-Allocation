@@ -50,14 +50,12 @@ class AllocationRecommendationOrchestrator:
 
             rule_results.append((engineer, rule_result))
 
-
         # STEP 2 - sort by rule score
         rule_results.sort(key=lambda x: x[1].score, reverse=True)
 
         # STEP 3 - choose TOP N (e.g. 5)
         top_n = 5
         top_candidates = rule_results[:top_n]
-
 
         # STEP 4 - only TOP N call LLM
         recommendations: list[RecommendationItem] = []
@@ -85,7 +83,6 @@ class AllocationRecommendationOrchestrator:
                 )
             )
 
-
         # STEP 5 - sort again by final score (LLM + rule)
         recommendations.sort(key=lambda item: item.score, reverse=True)
 
@@ -109,9 +106,7 @@ class AllocationRecommendationOrchestrator:
         session: AsyncSession,
         project_id: uuid.UUID,
     ) -> Project | None:
-        result = await session.execute(
-            select(Project).where(Project.id == project_id)
-        )
+        result = await session.execute(select(Project).where(Project.id == project_id))
         return result.scalar_one_or_none()
 
     async def _get_engineers(
@@ -125,9 +120,7 @@ class AllocationRecommendationOrchestrator:
         self,
         session: AsyncSession,
     ) -> list[Allocation]:
-        result = await session.execute(
-            select(Allocation).where(Allocation.status == "active")
-        )
+        result = await session.execute(select(Allocation).where(Allocation.status == "active"))
         return list(result.scalars().all())
 
     async def _get_latest_bench_forecasts(

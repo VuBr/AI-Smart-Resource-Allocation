@@ -2,6 +2,7 @@
 Unit tests for LLMScoringService stub.
 Bảo vệ AC-13: stub phải có đúng fields, llm_provider="stub", model_version="stub-v0".
 """
+
 import uuid
 
 import pytest

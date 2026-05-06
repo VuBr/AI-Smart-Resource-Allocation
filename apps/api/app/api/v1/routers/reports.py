@@ -21,7 +21,9 @@ async def get_shortage_report(db: AsyncSession = Depends(get_db)) -> list[dict[s
 
     required_by_skill: Counter[str] = Counter()
     projects_result = await db.execute(
-        select(Project.required_skills, Project.headcount).where(Project.status.in_(("active", "planned")))
+        select(Project.required_skills, Project.headcount).where(
+            Project.status.in_(("active", "planned"))
+        )
     )
     for required_skills, headcount in projects_result.all():
         skills = parse_skills(required_skills)
@@ -39,7 +41,9 @@ async def get_shortage_report(db: AsyncSession = Depends(get_db)) -> list[dict[s
         .where(Allocation.status == "active")
         .group_by(Allocation.engineer_id)
     )
-    allocated_percent_by_engineer = {engineer_id: int(total or 0) for engineer_id, total in allocations_result.all()}
+    allocated_percent_by_engineer = {
+        engineer_id: int(total or 0) for engineer_id, total in allocations_result.all()
+    }
 
     engineers_result = await db.execute(
         select(
@@ -50,7 +54,12 @@ async def get_shortage_report(db: AsyncSession = Depends(get_db)) -> list[dict[s
         )
     )
     available_engineers_by_skill: dict[str, set[str]] = defaultdict(set)
-    for engineer_id, primary_skill, secondary_skills, availability_percentage in engineers_result.all():
+    for (
+        engineer_id,
+        primary_skill,
+        secondary_skills,
+        availability_percentage,
+    ) in engineers_result.all():
         base_availability = int(availability_percentage or 0)
         if base_availability <= 0:
             continue

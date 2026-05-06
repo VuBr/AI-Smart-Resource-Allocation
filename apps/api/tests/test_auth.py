@@ -2,6 +2,7 @@
 Integration tests cho auth endpoint.
 Bảo vệ AC-5: POST /auth/login — mock JWT stub.
 """
+
 import pytest
 
 

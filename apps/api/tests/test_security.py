@@ -3,6 +3,7 @@ Unit tests for security stub (Mock JWT).
 Bảo vệ AC-5: create_access_token + decode_token hoạt động đúng format.
 Không test real JWT signature — đó là scope Phase 2+.
 """
+
 import pytest
 
 from app.core.security import create_access_token, decode_token

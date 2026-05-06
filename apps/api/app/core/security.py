@@ -4,7 +4,6 @@
 
 from typing import Any  # noqa: I001
 
-
 MOCK_TOKEN = "mock.jwt.token.phase5"  # noqa: S105 — stub only
 
 

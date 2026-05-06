@@ -82,11 +82,7 @@ class LLMScoringService:
         experience_match = self._compute_experience_match(engineer, project)
         availability_match = self._compute_availability_match(engineer, active_allocations)
 
-        base_score = (
-            0.50 * skill_match
-            + 0.25 * experience_match
-            + 0.25 * availability_match
-        )
+        base_score = 0.50 * skill_match + 0.25 * experience_match + 0.25 * availability_match
 
         risk_penalty, risk_notes = self._compute_risk_penalty(bench_forecast)
         final_score = self._clamp(base_score - risk_penalty)

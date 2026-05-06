@@ -91,12 +91,16 @@ async def test_dashboard_stats_returns_real_aggregates(client):
 
 # --- IT: GET /engineers/{id}/bench-forecast (C-5) ---
 
+
 @pytest.mark.asyncio
 async def test_bench_forecast_for_valid_engineer_returns_200(client):
     """Create engineer then get bench-forecast -> 200 with expected fields."""
     # Create engineer first
     import io
-    csv_content = b"name,email,primary_skill,level\nForecast Engineer,forecast@example.com,Python,senior\n"
+
+    csv_content = (
+        b"name,email,primary_skill,level\nForecast Engineer,forecast@example.com,Python,senior\n"
+    )
     upload_resp = await client.post(
         "/api/v1/engineers/upload",
         files={"file": ("engineers.csv", io.BytesIO(csv_content), "text/csv")},
@@ -125,4 +129,3 @@ async def test_bench_forecast_for_invalid_engineer_returns_404(client):
     body = response.json()
     assert "error" in body
     assert body["error"]["code"] == "EngineerNotFound"
-

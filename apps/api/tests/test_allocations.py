@@ -65,11 +65,13 @@ async def test_confirm_allocation_valid_returns_201(client):
 
 # --- IT: GET /allocations/recommendations/{project_id} (C-10) ---
 
+
 @pytest.mark.asyncio
 async def test_get_recommendations_returns_200(client):
     """GET /recommendations/{project_id} với project_id tồn tại → 200."""
     # Tạo project trước
     import io
+
     csv_content = b"name,description,status\nTest Project,Desc,active\n"
     await client.post(
         "/api/v1/projects/upload",

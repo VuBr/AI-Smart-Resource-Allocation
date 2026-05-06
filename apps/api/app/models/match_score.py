@@ -25,6 +25,8 @@ class MatchScore(Base):
     risk_notes: Mapped[str | None] = mapped_column(Text, nullable=True)
     llm_provider: Mapped[str] = mapped_column(String(50), default="stub")
     model_version: Mapped[str] = mapped_column(String(50), default="stub-v0")
-    computed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    computed_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
 
     __table_args__ = (Index("ix_match_scores_engineer_project", "engineer_id", "project_id"),)
