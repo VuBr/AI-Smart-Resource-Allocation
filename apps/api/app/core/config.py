@@ -12,7 +12,7 @@ class Settings(BaseSettings):
 
     # LLM (stub in Phase 5)
     OPENAI_API_KEY: str = ""
-    GEMINI_API_KEY: str = ""    
+    GEMINI_API_KEY: str = ""
     LLM_PROVIDER: str = "gemini"
     LLM_MODEL: str = "gemini-1.5-flash"
     LLM_MAX_TOKENS: int = 2048

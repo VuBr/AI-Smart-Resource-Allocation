@@ -1,14 +1,13 @@
 import asyncio
 import uuid
-from datetime import date
 
-from app.services.llm_scoring import LLMScoringService
+from app.core.config import get_settings
 from app.models.engineer import Engineer
 from app.models.project import Project
-from app.core.config import get_settings
+from app.services.llm_scoring import LLMScoringService
+
 
 async def main():
-    
     service = LLMScoringService()
 
     engineer = Engineer(
@@ -45,5 +44,6 @@ async def main():
     print("LLM_PROVIDER =", settings.LLM_PROVIDER)
     print("LLM_MODEL =", settings.LLM_MODEL)
     print("GEMINI_API_KEY exists =", bool(settings.GEMINI_API_KEY))
+
 
 asyncio.run(main())
