@@ -37,3 +37,33 @@ async def test_upload_projects_oversized_returns_413(client):
         files={"file": ("big.csv", io.BytesIO(big_content), "text/csv")},
     )
     assert response.status_code == 413
+
+
+@pytest.mark.asyncio
+async def test_create_project_returns_201(client):
+    response = await client.post(
+        "/api/v1/projects",
+        json={
+            "name": "Project Nebula",
+            "description": "New platform migration",
+            "required_skills": "React,Node.js",
+            "required_level": "senior",
+            "headcount": 3,
+            "status": "planned",
+        },
+    )
+    assert response.status_code == 201
+    body = response.json()
+    assert body["name"] == "Project Nebula"
+
+
+@pytest.mark.asyncio
+async def test_create_project_duplicate_name_returns_400(client):
+    payload = {"name": "Project Atlas", "headcount": 2, "status": "active"}
+    first = await client.post("/api/v1/projects", json=payload)
+    assert first.status_code == 201
+
+    second = await client.post("/api/v1/projects", json=payload)
+    assert second.status_code == 400
+    body = second.json()
+    assert body["error"]["code"] == "ProjectNameExists"

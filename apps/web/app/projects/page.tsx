@@ -2,9 +2,12 @@
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { AppShell } from "@/components/layout/AppShell";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
-import { listProjects } from "@/lib/services/projects";
+import { createProject, listProjects } from "@/lib/services/projects";
+import type { CreateProjectRequest } from "@/types";
+import { AddProjectModal } from "@/features/projects/AddProjectModal";
 import { ProjectFilterTabs, type ProjectTab } from "@/features/projects/ProjectFilterTabs";
 import { ProjectsTable } from "@/features/projects/ProjectsTable";
 
@@ -33,18 +36,43 @@ function TableSkeleton() {
 export default function ProjectsPage() {
   useAuthGuard();
   const [tab, setTab] = useState<ProjectTab>("all");
+  const [addOpen, setAddOpen] = useState(false);
+  const [creating, setCreating] = useState(false);
+  const [createError, setCreateError] = useState<string | null>(null);
 
-  const { data: projects = [], isLoading } = useQuery({
+  const { data: projects = [], isLoading, refetch } = useQuery({
     queryKey: ["projects"],
     queryFn: listProjects,
   });
 
   const filtered = tab === "all" ? projects : projects.filter((p) => p.status === tab);
 
+  async function handleCreateProject(payload: CreateProjectRequest) {
+    setCreateError(null);
+    setCreating(true);
+    try {
+      await createProject(payload);
+      setAddOpen(false);
+      refetch();
+    } catch (error) {
+      let message = "Failed to create project.";
+      if (error instanceof AxiosError) {
+        const apiMessage = (error.response?.data as { error?: { message?: string } } | undefined)
+          ?.error?.message;
+        message = apiMessage || error.message || message;
+      } else if (error instanceof Error) {
+        message = error.message;
+      }
+      setCreateError(message);
+    } finally {
+      setCreating(false);
+    }
+  }
+
   return (
     <AppShell breadcrumbs={breadcrumbs} title="Project Portfolio">
       <div className="px-6 py-7 space-y-6">
-        <ProjectFilterTabs active={tab} onChange={setTab} />
+        <ProjectFilterTabs active={tab} onChange={setTab} onNewProject={() => setAddOpen(true)} />
 
         {isLoading ? (
           <TableSkeleton />
@@ -52,6 +80,16 @@ export default function ProjectsPage() {
           <ProjectsTable projects={filtered} total={projects.length} />
         )}
       </div>
+      <AddProjectModal
+        open={addOpen}
+        creating={creating}
+        submitError={createError}
+        onClose={() => {
+          setAddOpen(false);
+          setCreateError(null);
+        }}
+        onSubmit={handleCreateProject}
+      />
     </AppShell>
   );
 }

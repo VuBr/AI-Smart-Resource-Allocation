@@ -1,5 +1,5 @@
 import apiClient from "@/lib/api-client";
-import type { CsvImportResult, Project } from "@/types";
+import type { CreateProjectRequest, CsvImportResult, Project } from "@/types";
 
 export async function listProjects(): Promise<Project[]> {
   const { data } = await apiClient.get<Project[]>("/api/v1/projects");
@@ -17,5 +17,10 @@ export async function uploadProjects(file: File): Promise<CsvImportResult> {
   const { data } = await apiClient.post<CsvImportResult>("/api/v1/projects/upload", form, {
     headers: { "Content-Type": "multipart/form-data" },
   });
+  return data;
+}
+
+export async function createProject(body: CreateProjectRequest): Promise<Project> {
+  const { data } = await apiClient.post<Project>("/api/v1/projects", body);
   return data;
 }

@@ -4,12 +4,35 @@ from fastapi import APIRouter, Depends, HTTPException, UploadFile, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.database import get_db
+from app.models.project import Project
 from app.repositories.project_repository import ProjectRepository
 from app.schemas.common import ErrorDetail, ErrorResponse
-from app.schemas.project import ProjectListItem, ProjectResponse
+from app.schemas.project import ProjectCreateRequest, ProjectListItem, ProjectResponse
 from app.services.csv_ingestion import CSVIngestionService
 
 router = APIRouter()
+
+
+@router.post("", response_model=ProjectResponse, status_code=status.HTTP_201_CREATED)
+async def create_project(
+    request: ProjectCreateRequest, db: AsyncSession = Depends(get_db)
+) -> ProjectResponse:
+    repo = ProjectRepository(db)
+    existing = await repo.get_by_name(request.name)
+    if existing:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=ErrorResponse(
+                error=ErrorDetail(
+                    code="ProjectNameExists",
+                    message=f"Project name {request.name} already exists",
+                )
+            ).model_dump(),
+        )
+
+    project = Project(**request.to_db_dict())
+    created = await repo.create(project)
+    return ProjectResponse.model_validate(created)
 
 
 @router.post("/upload", status_code=status.HTTP_200_OK)

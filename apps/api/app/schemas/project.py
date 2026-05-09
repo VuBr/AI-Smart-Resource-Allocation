@@ -122,3 +122,64 @@ class ProjectListItem(BaseModel):
 
 class ProjectResponse(ProjectListItem):
     updated_at: datetime
+
+
+class ProjectCreateRequest(BaseModel):
+    name: str
+    description: str | None = None
+    required_skills: str | None = None
+    required_level: Literal["junior", "mid", "senior", "lead"] | None = None
+    headcount: int = 1
+    status: Literal["planned", "active", "closed"] = "planned"
+    start_date: date | None = None
+    end_date: date | None = None
+
+    @model_validator(mode="before")
+    @classmethod
+    def _coerce_and_strip_create(cls, values: dict) -> dict:
+        return ProjectCsvRow._coerce_and_strip(values)
+
+    @field_validator("name")
+    @classmethod
+    def _validate_name_create(cls, v: str) -> str:
+        return ProjectCsvRow._validate_name(v)
+
+    @field_validator("description")
+    @classmethod
+    def _validate_description_create(cls, v: str | None) -> str | None:
+        return ProjectCsvRow._validate_description(v)
+
+    @field_validator("required_skills")
+    @classmethod
+    def _validate_required_skills_create(cls, v: str | None) -> str | None:
+        return ProjectCsvRow._validate_required_skills(v)
+
+    @field_validator("headcount", mode="before")
+    @classmethod
+    def _validate_headcount_create(cls, v: object) -> int:
+        return ProjectCsvRow._validate_headcount(v)
+
+    @field_validator("start_date", "end_date", mode="before")
+    @classmethod
+    def _parse_date_create(cls, v: object) -> date | None:
+        return ProjectCsvRow._parse_date(v)
+
+    @model_validator(mode="after")
+    def _validate_date_range_create(self) -> "ProjectCreateRequest":
+        if self.start_date and self.end_date and self.end_date < self.start_date:
+            raise ValueError(
+                f"end_date must be >= start_date (end: {self.end_date}, start: {self.start_date})"
+            )
+        return self
+
+    def to_db_dict(self) -> dict:
+        return {
+            "name": self.name,
+            "description": self.description,
+            "required_skills": self.required_skills,
+            "required_level": self.required_level,
+            "headcount": self.headcount,
+            "status": self.status,
+            "start_date": self.start_date,
+            "end_date": self.end_date,
+        }

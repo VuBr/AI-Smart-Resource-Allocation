@@ -18,6 +18,10 @@ class ProjectRepository:
         result = await self.db.execute(select(Project).where(Project.id == project_id))
         return result.scalar_one_or_none()
 
+    async def get_by_name(self, name: str) -> Project | None:
+        result = await self.db.execute(select(Project).where(Project.name == name))
+        return result.scalar_one_or_none()
+
     async def create(self, project: Project) -> Project:
         self.db.add(project)
         await self.db.commit()

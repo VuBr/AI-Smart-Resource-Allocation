@@ -41,6 +41,17 @@ export interface Project {
   created_at: string;
 }
 
+export interface CreateProjectRequest {
+  name: string;
+  description?: string | null;
+  required_skills?: string | null;
+  required_level?: EngineerLevel | null;
+  headcount?: number;
+  status?: ProjectStatus;
+  start_date?: string | null;
+  end_date?: string | null;
+}
+
 export interface Allocation {
   id: string;
   engineer_id: string;
