@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { AppShell } from "@/components/layout/AppShell";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
@@ -77,7 +78,14 @@ export default function EngineersPage() {
       setAddOpen(false);
       refetch();
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to create engineer.";
+      let message = "Failed to create engineer.";
+      if (error instanceof AxiosError) {
+        const apiMessage = (error.response?.data as { error?: { message?: string } } | undefined)
+          ?.error?.message;
+        message = apiMessage || error.message || message;
+      } else if (error instanceof Error) {
+        message = error.message;
+      }
       setCreateError(message);
     } finally {
       setCreating(false);
