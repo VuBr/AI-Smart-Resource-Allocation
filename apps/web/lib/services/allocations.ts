@@ -36,3 +36,15 @@ export async function getActiveAllocationsDetail(): Promise<AllocationDetail[]> 
   const { data } = await apiClient.get<AllocationDetail[]>("/api/v1/allocations/active?detail=true");
   return data;
 }
+
+export async function updateAllocation(
+  id: string,
+  body: { percentage: number; start_date?: string | null; end_date?: string | null }
+): Promise<Allocation> {
+  const { data } = await apiClient.patch<Allocation>(`/api/v1/allocations/${id}`, body);
+  return data;
+}
+
+export async function removeAllocation(id: string): Promise<void> {
+  await apiClient.delete(`/api/v1/allocations/${id}`);
+}

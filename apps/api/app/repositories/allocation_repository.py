@@ -37,11 +37,48 @@ class AllocationRepository:
         await self.db.refresh(allocation)
         return allocation
 
+    async def get_by_id(self, allocation_id: uuid.UUID) -> Allocation | None:
+        return await self.db.get(Allocation, allocation_id)
+
+    async def update(
+        self,
+        allocation: Allocation,
+        *,
+        percentage: int,
+        start_date,
+        end_date,
+    ) -> Allocation:
+        allocation.percentage = percentage
+        allocation.start_date = start_date
+        allocation.end_date = end_date
+        await self.db.commit()
+        await self.db.refresh(allocation)
+        return allocation
+
+    async def delete(self, allocation: Allocation) -> None:
+        await self.db.delete(allocation)
+        await self.db.commit()
+
     async def get_total_percentage(self, engineer_id: uuid.UUID) -> int:
         result = await self.db.execute(
             select(func.coalesce(func.sum(Allocation.percentage), 0)).where(
                 Allocation.engineer_id == engineer_id,
                 Allocation.status == "active",
+            )
+        )
+        total = result.scalar_one()
+        return int(total)
+
+    async def get_total_percentage_excluding_allocation(
+        self,
+        engineer_id: uuid.UUID,
+        allocation_id: uuid.UUID,
+    ) -> int:
+        result = await self.db.execute(
+            select(func.coalesce(func.sum(Allocation.percentage), 0)).where(
+                Allocation.engineer_id == engineer_id,
+                Allocation.status == "active",
+                Allocation.id != allocation_id,
             )
         )
         total = result.scalar_one()

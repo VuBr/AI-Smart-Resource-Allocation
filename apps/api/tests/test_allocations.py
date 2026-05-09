@@ -97,3 +97,37 @@ async def test_get_recommendations_invalid_project_returns_404(client):
     body = resp.json()
     assert "error" in body
     assert body["error"]["code"] == "ProjectNotFound"
+
+
+@pytest.mark.asyncio
+async def test_update_allocation_returns_200(client):
+    engineer_id = str(uuid.uuid4())
+    project_id = str(uuid.uuid4())
+    created = await client.post(
+        "/api/v1/allocations/confirm",
+        json={"engineer_id": engineer_id, "project_id": project_id, "percentage": 40},
+    )
+    assert created.status_code == 201
+    allocation_id = created.json()["id"]
+
+    updated = await client.patch(
+        f"/api/v1/allocations/{allocation_id}",
+        json={"percentage": 60},
+    )
+    assert updated.status_code == 200
+    assert updated.json()["percentage"] == 60
+
+
+@pytest.mark.asyncio
+async def test_delete_allocation_returns_204(client):
+    engineer_id = str(uuid.uuid4())
+    project_id = str(uuid.uuid4())
+    created = await client.post(
+        "/api/v1/allocations/confirm",
+        json={"engineer_id": engineer_id, "project_id": project_id, "percentage": 40},
+    )
+    assert created.status_code == 201
+    allocation_id = created.json()["id"]
+
+    deleted = await client.delete(f"/api/v1/allocations/{allocation_id}")
+    assert deleted.status_code == 204

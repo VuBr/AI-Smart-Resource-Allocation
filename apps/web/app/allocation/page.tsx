@@ -8,10 +8,12 @@ import { useAuthGuard } from "@/hooks/useAuthGuard";
 import {
   confirmAllocation,
   getActiveAllocationsDetail,
+  removeAllocation,
   recommend,
+  updateAllocation,
 } from "@/lib/services/allocations";
 import { listProjects } from "@/lib/services/projects";
-import type { RecommendationItem } from "@/types";
+import type { AllocationDetail, RecommendationItem } from "@/types";
 import { ProjectSelectorBar } from "@/features/allocation/ProjectSelectorBar";
 import { RecommendationCard } from "@/features/allocation/RecommendationCard";
 import {
@@ -19,6 +21,10 @@ import {
   type ModalState,
 } from "@/features/allocation/ConfirmAllocationModal";
 import { ActiveAllocationsTable } from "@/features/allocation/ActiveAllocationsTable";
+import {
+  ConfirmModal,
+  type ConfirmModalState,
+} from "@/features/allocation/ConfirmModal";
 
 const breadcrumbs: BreadcrumbItem[] = [
   { label: "ResourceAI" },
@@ -33,6 +39,9 @@ export default function AllocationPage() {
   const [loadingRec, setLoadingRec] = useState(false);
   const [modalState, setModalState] = useState<ModalState | null>(null);
   const [confirming, setConfirming] = useState(false);
+  const [actionModalState, setActionModalState] = useState<ConfirmModalState | null>(null);
+  const [actionBusy, setActionBusy] = useState(false);
+  const [editPercentage, setEditPercentage] = useState(100);
 
   const { data: projects = [] } = useQuery({ queryKey: ["projects"], queryFn: listProjects });
   const { data: activeAllocations = [], refetch } = useQuery({
@@ -73,6 +82,33 @@ export default function AllocationPage() {
     }
   }
 
+  function handleEditAllocation(allocation: AllocationDetail) {
+    setEditPercentage(allocation.percentage);
+    setActionModalState({ mode: "edit", allocation });
+  }
+
+  function handleRemoveAllocation(allocation: AllocationDetail) {
+    setActionModalState({ mode: "remove", allocation });
+  }
+
+  async function handleConfirmAction(allocation: AllocationDetail, percentage?: number) {
+    setActionBusy(true);
+    try {
+      if (actionModalState?.mode === "edit") {
+        await updateAllocation(allocation.id, {
+          percentage: Math.round(percentage ?? allocation.percentage),
+          start_date: allocation.start_date,
+          end_date: allocation.end_date,
+        });
+      } else {
+        await removeAllocation(allocation.id);
+      }
+      refetch();
+    } finally {
+      setActionBusy(false);
+    }
+  }
+
   return (
     <AppShell breadcrumbs={breadcrumbs} title="Resource Allocation">
       <div className="px-6 py-7 space-y-6">
@@ -109,7 +145,11 @@ export default function AllocationPage() {
         )}
 
         {/* Active allocations table */}
-        <ActiveAllocationsTable allocations={activeAllocations} />
+        <ActiveAllocationsTable
+          allocations={activeAllocations}
+          onEdit={handleEditAllocation}
+          onRemove={handleRemoveAllocation}
+        />
       </div>
 
       {/* Confirm modal */}
@@ -118,6 +158,14 @@ export default function AllocationPage() {
         onClose={() => setModalState(null)}
         onConfirm={handleConfirm}
         confirming={confirming}
+      />
+      <ConfirmModal
+        state={actionModalState}
+        busy={actionBusy}
+        percentage={editPercentage}
+        onPercentageChange={setEditPercentage}
+        onClose={() => setActionModalState(null)}
+        onConfirm={handleConfirmAction}
       />
     </AppShell>
   );

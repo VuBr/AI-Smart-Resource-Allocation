@@ -13,6 +13,8 @@ from app.schemas.allocation import (
     AllocationActiveItem,
     AllocationConfirmRequest,
     AllocationConfirmResponse,
+    AllocationUpdateRequest,
+    AllocationUpdateResponse,
     RecommendationResponse,
 )
 from app.schemas.common import ErrorDetail, ErrorResponse
@@ -121,3 +123,67 @@ async def get_active_allocations(
     repo = AllocationRepository(db)
     allocations = await repo.get_active()
     return [AllocationActiveItem.model_validate(a) for a in allocations]
+
+
+@router.patch("/{allocation_id}", response_model=AllocationUpdateResponse)
+async def update_allocation(
+    allocation_id: uuid.UUID,
+    request: AllocationUpdateRequest,
+    db: AsyncSession = Depends(get_db),
+) -> AllocationUpdateResponse:
+    repo = AllocationRepository(db)
+    allocation = await repo.get_by_id(allocation_id)
+    if not allocation:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=ErrorResponse(
+                error=ErrorDetail(
+                    code="AllocationNotFound",
+                    message=f"Allocation {allocation_id} not found",
+                )
+            ).model_dump(),
+        )
+
+    current_total = await repo.get_total_percentage_excluding_allocation(
+        allocation.engineer_id,
+        allocation.id,
+    )
+    if current_total + request.percentage > 100:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=ErrorResponse(
+                error=ErrorDetail(
+                    code="AllocationCapExceeded",
+                    message=f"Total allocation would exceed 100% (current: {current_total}%)",
+                )
+            ).model_dump(),
+        )
+
+    updated = await repo.update(
+        allocation,
+        percentage=request.percentage,
+        start_date=request.start_date,
+        end_date=request.end_date,
+    )
+    return AllocationUpdateResponse.model_validate(updated)
+
+
+@router.delete("/{allocation_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_allocation(
+    allocation_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db),
+) -> None:
+    repo = AllocationRepository(db)
+    allocation = await repo.get_by_id(allocation_id)
+    if not allocation:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=ErrorResponse(
+                error=ErrorDetail(
+                    code="AllocationNotFound",
+                    message=f"Allocation {allocation_id} not found",
+                )
+            ).model_dump(),
+        )
+
+    await repo.delete(allocation)

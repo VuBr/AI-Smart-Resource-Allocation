@@ -3,8 +3,8 @@ import type { AllocationDetail } from "@/types";
 
 interface ActiveAllocationsTableProps {
   allocations: AllocationDetail[];
-  onEdit?: (id: string) => void;
-  onRemove?: (id: string) => void;
+  onEdit?: (allocation: AllocationDetail) => void;
+  onRemove?: (allocation: AllocationDetail) => void;
 }
 
 function initials(name: string) {
@@ -132,13 +132,13 @@ export function ActiveAllocationsTable({
                   <td className="px-6 py-4 text-right">
                     <div className="flex items-center justify-end gap-x-1">
                       <button
-                        onClick={() => onEdit?.(alloc.id)}
+                        onClick={() => onEdit?.(alloc)}
                         className="rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-500 hover:bg-slate-100 transition-colors"
                       >
                         Edit
                       </button>
                       <button
-                        onClick={() => onRemove?.(alloc.id)}
+                        onClick={() => onRemove?.(alloc)}
                         className="rounded-lg px-3 py-1.5 text-xs font-semibold text-red-400 hover:bg-red-50 transition-colors"
                       >
                         Remove
