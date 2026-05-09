@@ -18,6 +18,10 @@ class EngineerRepository:
         result = await self.db.execute(select(Engineer).where(Engineer.id == engineer_id))
         return result.scalar_one_or_none()
 
+    async def get_by_email(self, email: str) -> Engineer | None:
+        result = await self.db.execute(select(Engineer).where(Engineer.email == email))
+        return result.scalar_one_or_none()
+
     async def create(self, engineer: Engineer) -> Engineer:
         self.db.add(engineer)
         await self.db.commit()

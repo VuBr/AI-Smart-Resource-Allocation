@@ -137,3 +137,66 @@ class EngineerResponse(BaseModel):
 class EngineerListResponse(BaseModel):
     items: list[EngineerResponse]
     total: int
+
+
+class EngineerCreateRequest(BaseModel):
+    name: str
+    email: str
+    primary_skill: str
+    level: Literal["junior", "mid", "senior", "lead"]
+    secondary_skills: str | None = None
+    years_of_experience: int = 0
+    availability_percentage: int = 100
+    bench_start_date: date | None = None
+
+    @model_validator(mode="before")
+    @classmethod
+    def _coerce_and_strip_create(cls, values: dict) -> dict:
+        return EngineerCsvRow._coerce_and_strip(values)
+
+    @field_validator("name")
+    @classmethod
+    def _validate_name_create(cls, v: str) -> str:
+        return EngineerCsvRow._validate_name(v)
+
+    @field_validator("email")
+    @classmethod
+    def _validate_email_create(cls, v: str) -> str:
+        return EngineerCsvRow._validate_email(v)
+
+    @field_validator("primary_skill")
+    @classmethod
+    def _validate_primary_skill_create(cls, v: str) -> str:
+        return EngineerCsvRow._validate_primary_skill(v)
+
+    @field_validator("secondary_skills")
+    @classmethod
+    def _validate_secondary_skills_create(cls, v: str | None) -> str | None:
+        return EngineerCsvRow._validate_secondary_skills(v)
+
+    @field_validator("years_of_experience", mode="before")
+    @classmethod
+    def _validate_years_create(cls, v: object) -> int:
+        return EngineerCsvRow._validate_years(v)
+
+    @field_validator("availability_percentage", mode="before")
+    @classmethod
+    def _validate_availability_create(cls, v: object) -> int:
+        return EngineerCsvRow._validate_availability(v)
+
+    @field_validator("bench_start_date", mode="before")
+    @classmethod
+    def _parse_date_create(cls, v: object) -> date | None:
+        return EngineerCsvRow._parse_date(v)
+
+    def to_db_dict(self) -> dict:
+        return {
+            "name": self.name,
+            "email": self.email,
+            "primary_skill": self.primary_skill,
+            "level": self.level,
+            "secondary_skills": self.secondary_skills,
+            "years_of_experience": self.years_of_experience,
+            "availability_percentage": self.availability_percentage,
+            "bench_start_date": self.bench_start_date,
+        }

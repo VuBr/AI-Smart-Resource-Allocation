@@ -5,8 +5,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { AppShell } from "@/components/layout/AppShell";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
-import { listEngineers } from "@/lib/services/engineers";
+import { createEngineer, listEngineers } from "@/lib/services/engineers";
+import type { CreateEngineerRequest } from "@/types";
 import { EngineerStatsBar } from "@/features/engineers/EngineerStatsBar";
+import { AddEngineerModal } from "@/features/engineers/AddEngineerModal";
 import { EngineersTable } from "@/features/engineers/EngineersTable";
 
 const breadcrumbs = [
@@ -50,8 +52,11 @@ function EngineersHeaderSlot({ search, onSearchChange }: { search: string; onSea
 export default function EngineersPage() {
   useAuthGuard();
   const [search, setSearch] = useState("");
+  const [addOpen, setAddOpen] = useState(false);
+  const [creating, setCreating] = useState(false);
+  const [createError, setCreateError] = useState<string | null>(null);
 
-  const { data: engineers = [], isLoading } = useQuery({
+  const { data: engineers = [], isLoading, refetch } = useQuery({
     queryKey: ["engineers"],
     queryFn: listEngineers,
   });
@@ -63,6 +68,21 @@ export default function EngineersPage() {
           e.primary_skill.toLowerCase().includes(search.toLowerCase())
       )
     : engineers;
+
+  async function handleCreateEngineer(payload: CreateEngineerRequest) {
+    setCreateError(null);
+    setCreating(true);
+    try {
+      await createEngineer(payload);
+      setAddOpen(false);
+      refetch();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to create engineer.";
+      setCreateError(message);
+    } finally {
+      setCreating(false);
+    }
+  }
 
   return (
     <AppShell
@@ -94,9 +114,19 @@ export default function EngineersPage() {
             </div>
           </div>
         ) : (
-          <EngineersTable engineers={filtered} />
+          <EngineersTable engineers={filtered} onAddEngineer={() => setAddOpen(true)} />
         )}
       </div>
+      <AddEngineerModal
+        open={addOpen}
+        creating={creating}
+        submitError={createError}
+        onClose={() => {
+          setAddOpen(false);
+          setCreateError(null);
+        }}
+        onSubmit={handleCreateEngineer}
+      />
     </AppShell>
   );
 }

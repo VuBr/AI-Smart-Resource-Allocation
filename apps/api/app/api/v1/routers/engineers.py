@@ -4,14 +4,37 @@ from fastapi import APIRouter, Depends, HTTPException, UploadFile, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.database import get_db
+from app.models.engineer import Engineer
 from app.repositories.engineer_repository import EngineerRepository
 from app.schemas.bench_forecast import BenchForecastItem
 from app.schemas.common import ErrorDetail, ErrorResponse
-from app.schemas.engineer import EngineerResponse
+from app.schemas.engineer import EngineerCreateRequest, EngineerResponse
 from app.services.bench_prediction import BenchPredictionEngine
 from app.services.csv_ingestion import CSVIngestionService
 
 router = APIRouter()
+
+
+@router.post("", response_model=EngineerResponse, status_code=status.HTTP_201_CREATED)
+async def create_engineer(
+    request: EngineerCreateRequest, db: AsyncSession = Depends(get_db)
+) -> EngineerResponse:
+    repo = EngineerRepository(db)
+    existing = await repo.get_by_email(request.email)
+    if existing:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=ErrorResponse(
+                error=ErrorDetail(
+                    code="EngineerEmailExists",
+                    message=f"Engineer email {request.email} already exists",
+                )
+            ).model_dump(),
+        )
+
+    engineer = Engineer(**request.to_db_dict())
+    created = await repo.create(engineer)
+    return EngineerResponse.model_validate(created)
 
 
 @router.post("/upload", status_code=status.HTTP_200_OK)

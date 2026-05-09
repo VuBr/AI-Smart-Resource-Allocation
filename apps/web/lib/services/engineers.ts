@@ -1,5 +1,5 @@
 import apiClient from "@/lib/api-client";
-import type { BenchForecastItem, CsvImportResult, Engineer } from "@/types";
+import type { BenchForecastItem, CreateEngineerRequest, CsvImportResult, Engineer } from "@/types";
 
 export async function listEngineers(): Promise<Engineer[]> {
   const { data } = await apiClient.get<Engineer[]>("/api/v1/engineers");
@@ -24,5 +24,10 @@ export async function getBenchForecast(id: string): Promise<BenchForecastItem> {
   const { data } = await apiClient.get<BenchForecastItem>(
     `/api/v1/engineers/${id}/bench-forecast`
   );
+  return data;
+}
+
+export async function createEngineer(body: CreateEngineerRequest): Promise<Engineer> {
+  const { data } = await apiClient.post<Engineer>("/api/v1/engineers", body);
   return data;
 }

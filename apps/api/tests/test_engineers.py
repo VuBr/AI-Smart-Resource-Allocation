@@ -49,3 +49,41 @@ async def test_upload_invalid_mime_returns_400(client):
         files={"file": ("test.json", io.BytesIO(b'{"key": "value"}'), "application/json")},
     )
     assert response.status_code == 400
+
+
+@pytest.mark.asyncio
+async def test_create_engineer_returns_201(client):
+    response = await client.post(
+        "/api/v1/engineers",
+        json={
+            "name": "New Engineer",
+            "email": "new.engineer@example.com",
+            "primary_skill": "Python",
+            "level": "senior",
+            "secondary_skills": "FastAPI,SQL",
+            "years_of_experience": 6,
+            "availability_percentage": 80,
+            "bench_start_date": None,
+        },
+    )
+    assert response.status_code == 201
+    body = response.json()
+    assert body["name"] == "New Engineer"
+    assert body["email"] == "new.engineer@example.com"
+
+
+@pytest.mark.asyncio
+async def test_create_engineer_duplicate_email_returns_400(client):
+    payload = {
+        "name": "Dup Engineer",
+        "email": "dup.engineer@example.com",
+        "primary_skill": "Python",
+        "level": "mid",
+    }
+    first = await client.post("/api/v1/engineers", json=payload)
+    assert first.status_code == 201
+
+    second = await client.post("/api/v1/engineers", json=payload)
+    assert second.status_code == 400
+    body = second.json()
+    assert body["error"]["code"] == "EngineerEmailExists"

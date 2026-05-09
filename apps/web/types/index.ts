@@ -17,6 +17,17 @@ export interface Engineer {
   updated_at: string;
 }
 
+export interface CreateEngineerRequest {
+  name: string;
+  email: string;
+  primary_skill: string;
+  secondary_skills?: string | null;
+  level: EngineerLevel;
+  years_of_experience?: number;
+  availability_percentage?: number;
+  bench_start_date?: string | null;
+}
+
 export interface Project {
   id: string;
   name: string;
