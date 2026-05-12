@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — ResourceAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300..900;1,14..32,300..900&display=swap" rel="stylesheet" />
+  <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','ui-sans-serif']}}}}</script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    [x-cloak]{display:none!important}
+    .sidebar-bg{background:linear-gradient(180deg,#0f172a 0%,#0f172a 60%,#111827 100%)}
+    .sidebar-scroll::-webkit-scrollbar{width:3px}
+    .sidebar-scroll::-webkit-scrollbar-track{background:transparent}
+    .sidebar-scroll::-webkit-scrollbar-thumb{background:#1e293b;border-radius:999px}
+    .kpi-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.04) 0%,transparent 60%);pointer-events:none;border-radius:inherit}
+  </style>
+</head>
+<body class="bg-slate-100 font-sans antialiased" style="min-width:1280px">
+
+<!-- ═══════════════════════════════ SIDEBAR ═══════════════════════════════ -->
+<aside class="sidebar-bg fixed inset-y-0 left-0 z-20 flex w-64 flex-col border-r border-white/5">
+
+  <!-- Brand -->
+  <div class="flex h-16 shrink-0 items-center gap-x-3 px-6 border-b border-white/5">
+    <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-indigo-600 shadow-lg shadow-indigo-500/40">
+      <svg class="h-4.5 w-4.5 text-white" style="height:18px;width:18px" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 19.5V21M12 3v1.5m0 15V21m3.75-18v1.5m0 15V21m-9-1.5h10.5a2.25 2.25 0 002.25-2.25V6.75a2.25 2.25 0 00-2.25-2.25H6.75A2.25 2.25 0 004.5 6.75v10.5a2.25 2.25 0 002.25 2.25zm.75-12h9v9h-9v-9z" /></svg>
+    </div>
+    <div class="min-w-0">
+      <p class="truncate text-sm font-bold text-white tracking-tight">ResourceAI</p>
+      <p class="text-[10px] text-slate-500 font-medium tracking-wide">ENTERPRISE</p>
+    </div>
+  </div>
+
+  <!-- Nav -->
+  <nav class="sidebar-scroll flex-1 overflow-y-auto px-3 py-5 space-y-5">
+
+    <!-- MAIN -->
+    <div>
+      <p class="mb-2 px-3 text-[10px] font-bold uppercase tracking-widest text-slate-600">Main</p>
+      <!-- Dashboard — ACTIVE -->
+      <a href="dashboard.html" class="group flex items-center gap-x-3 rounded-lg px-3 py-2.5 text-sm font-semibold bg-indigo-600 text-white shadow-md shadow-indigo-500/30">
+        <svg class="h-4 w-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" /></svg>
+        Dashboard
+        <span class="ml-auto flex h-5 w-5 items-center justify-center rounded-md bg-white/20 text-[10px] font-bold text-white">5</span>
+      </a>
+    </div>
+
+    <!-- WORKSPACE -->
+    <div>
+      <p class="mb-2 px-3 text-[10px] font-bold uppercase tracking-widest text-slate-600">Workspace</p>
+      <div class="space-y-0.5">
+        <a href="engineers.html" class="flex items-center gap-x-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-400 hover:bg-white/5 hover:text-white transition-colors">
+          <svg class="h-4 w-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" /></svg>
+          Engineers
+        </a>
+        <a href="projects.html" class="flex items-center gap-x-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-400 hover:bg-white/5 hover:text-white transition-colors">
+          <svg class="h-4 w-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" /></svg>
+          Projects
+        </a>
+        <a href="allocation.html" class="flex items-center gap-x-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-400 hover:bg-white/5 hover:text-white transition-colors">
+          <svg class="h-4 w-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" /></svg>
+          Allocation
+        </a>
+        <a href="upload.html" class="flex items-center gap-x-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-400 hover:bg-white/5 hover:text-white transition-colors">
+          <svg class="h-4 w-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" /></svg>
+          Upload Data
+        </a>
+      </div>
+    </div>
+
+    <!-- ANALYTICS -->
+    <div>
+      <p class="mb-2 px-3 text-[10px] font-bold uppercase tracking-widest text-slate-600">Analytics</p>
+      <div class="space-y-0.5">
+        <a href="bench-forecast.html" class="flex items-center gap-x-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-400 hover:bg-white/5 hover:text-white transition-colors">
+          <svg class="h-4 w-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" /></svg>
+          Bench Forecast
+          <span class="ml-auto flex h-5 items-center rounded-full bg-red-500/20 px-1.5 text-[10px] font-bold text-red-400">5</span>
+        </a>
+        <a href="reports.html" class="flex items-center gap-x-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-400 hover:bg-white/5 hover:text-white transition-colors">
+          <svg class="h-4 w-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25M9 16.5v.75m3-3v3M15 12v5.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+          Reports
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- User section -->
+  <div class="shrink-0 border-t border-white/5 p-4">
+    <div class="flex items-center gap-x-3 rounded-xl bg-white/5 px-3 py-3">
+      <div class="relative">
+        <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-indigo-400 to-indigo-600 text-xs font-bold text-white">JD</div>
+        <span class="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-slate-900 bg-emerald-400"></span>
+      </div>
+      <div class="min-w-0 flex-1">
+        <p class="truncate text-xs font-semibold text-white">John Doe</p>
+        <p class="text-[10px] text-slate-500">Administrator</p>
+      </div>
+      <button class="shrink-0 rounded-lg p-1 text-slate-500 hover:bg-white/10 hover:text-white transition-colors">
+        <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" /></svg>
+      </button>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══════════════════════════════ HEADER ═══════════════════════════════ -->
+<header class="fixed left-64 right-0 top-0 z-10 flex h-16 items-center border-b border-slate-200/80 bg-white/95 backdrop-blur-sm px-6 gap-x-4">
+  <div class="flex-1">
+    <div class="flex items-center gap-x-2 text-xs text-slate-400 font-medium">
+      <span>ResourceAI</span>
+      <span class="text-slate-300">/</span>
+      <span class="text-slate-700 font-semibold">Dashboard</span>
+    </div>
+    <h1 class="text-sm font-bold text-slate-900 mt-0.5 leading-none">Overview</h1>
+  </div>
+
+  <!-- Date chip -->
+  <div class="hidden items-center gap-x-1.5 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-600 sm:flex">
+    <svg class="h-3.5 w-3.5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" /></svg>
+    Q1 · March 31, 2025
+  </div>
+
+  <!-- Notification -->
+  <button class="relative flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 hover:border-slate-300 hover:text-slate-700 transition-colors">
+    <svg class="h-4.5 w-4.5" style="height:18px;width:18px" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" /></svg>
+    <span class="absolute right-1.5 top-1.5 flex h-2 w-2 items-center justify-center">
+      <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
+      <span class="relative inline-flex h-2 w-2 rounded-full bg-red-500"></span>
+    </span>
+  </button>
+
+  <!-- User chip -->
+  <button class="flex items-center gap-x-2.5 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm hover:border-slate-300 transition-colors">
+    <div class="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-indigo-400 to-indigo-600 text-[10px] font-bold text-white">JD</div>
+    <span class="font-medium text-slate-700">John Doe</span>
+    <span class="rounded-full bg-violet-100 px-1.5 py-0.5 text-[10px] font-bold text-violet-700">Admin</span>
+    <svg class="h-3.5 w-3.5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+  </button>
+</header>
+
+<!-- ═══════════════════════════════ MAIN ═══════════════════════════════ -->
+<main class="ml-64 pt-16">
+  <div class="px-6 py-7 space-y-6">
+
+    <!-- Section heading -->
+    <div class="flex items-center justify-between">
+      <div>
+        <h2 class="text-lg font-bold text-slate-900">Resource Overview</h2>
+        <p class="text-sm text-slate-500 mt-0.5">Q1 2025 · Last updated 2 minutes ago</p>
+      </div>
+      <button class="flex items-center gap-x-1.5 rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors shadow-sm">
+        <svg class="h-3.5 w-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" /></svg>
+        Refresh
+      </button>
+    </div>
+
+    <!-- ── KPI CARDS ── -->
+    <div class="grid grid-cols-4 gap-5">
+
+      <!-- Total Engineers -->
+      <div class="kpi-card relative overflow-hidden rounded-2xl bg-white p-5 shadow-sm border border-slate-200/80">
+        <div class="flex items-start justify-between mb-4">
+          <div>
+            <p class="text-xs font-bold uppercase tracking-widest text-slate-400">Total Engineers</p>
+            <p class="mt-2 text-4xl font-black text-slate-900 tabular-nums leading-none">24</p>
+          </div>
+          <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-indigo-600 shadow-md shadow-indigo-500/30">
+            <svg class="h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" /></svg>
+          </div>
+        </div>
+        <div class="flex items-center gap-x-1.5 mb-3">
+          <span class="inline-flex items-center gap-x-1 text-xs font-bold text-emerald-600">
+            <svg class="h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18" /></svg>
+            +8.3%
+          </span>
+          <span class="text-xs text-slate-400">vs last month</span>
+        </div>
+        <div class="h-1.5 w-full rounded-full bg-slate-100 overflow-hidden">
+          <div class="h-full rounded-full bg-indigo-500" style="width:100%"></div>
+        </div>
+      </div>
+
+      <!-- Engineers on Bench -->
+      <div class="kpi-card relative overflow-hidden rounded-2xl bg-white p-5 shadow-sm border border-slate-200/80">
+        <div class="flex items-start justify-between mb-4">
+          <div>
+            <p class="text-xs font-bold uppercase tracking-widest text-slate-400">On Bench</p>
+            <p class="mt-2 text-4xl font-black text-slate-900 tabular-nums leading-none">5</p>
+          </div>
+          <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-red-500 shadow-md shadow-red-500/30">
+            <svg class="h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" /></svg>
+          </div>
+        </div>
+        <div class="flex items-center gap-x-1.5 mb-3">
+          <span class="inline-flex items-center gap-x-1 text-xs font-bold text-red-600">
+            <svg class="h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" /></svg>
+            +1
+          </span>
+          <span class="text-xs text-slate-400">from last week</span>
+        </div>
+        <div class="h-1.5 w-full rounded-full bg-slate-100 overflow-hidden">
+          <div class="h-full rounded-full bg-red-500" style="width:21%"></div>
+        </div>
+      </div>
+
+      <!-- Active Projects -->
+      <div class="kpi-card relative overflow-hidden rounded-2xl bg-white p-5 shadow-sm border border-slate-200/80">
+        <div class="flex items-start justify-between mb-4">
+          <div>
+            <p class="text-xs font-bold uppercase tracking-widest text-slate-400">Active Projects</p>
+            <p class="mt-2 text-4xl font-black text-slate-900 tabular-nums leading-none">8</p>
+          </div>
+          <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-500 shadow-md shadow-blue-500/30">
+            <svg class="h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9.776c.112-.017.227-.026.344-.026h15.812c.117 0 .232.009.344.026m-16.5 0a2.25 2.25 0 00-1.883 2.542l.857 6a2.25 2.25 0 002.227 1.932H19.05a2.25 2.25 0 002.227-1.932l.857-6a2.25 2.25 0 00-1.883-2.542m-16.5 0V6A2.25 2.25 0 016 3.75h3.879a1.5 1.5 0 011.06.44l2.122 2.12a1.5 1.5 0 001.06.44H18A2.25 2.25 0 0120.25 9v.776" /></svg>
+          </div>
+        </div>
+        <div class="flex items-center gap-x-1.5 mb-3">
+          <span class="inline-flex items-center gap-x-1 text-xs font-bold text-emerald-600">
+            <svg class="h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18" /></svg>
+            +3
+          </span>
+          <span class="text-xs text-slate-400">this quarter</span>
+        </div>
+        <div class="h-1.5 w-full rounded-full bg-slate-100 overflow-hidden">
+          <div class="h-full rounded-full bg-blue-500" style="width:66%"></div>
+        </div>
+      </div>
+
+      <!-- Allocation Rate -->
+      <div class="kpi-card relative overflow-hidden rounded-2xl bg-white p-5 shadow-sm border border-slate-200/80">
+        <div class="flex items-start justify-between mb-4">
+          <div>
+            <p class="text-xs font-bold uppercase tracking-widest text-slate-400">Allocation Rate</p>
+            <p class="mt-2 text-4xl font-black text-slate-900 tabular-nums leading-none">78.3<span class="text-2xl font-bold text-slate-400">%</span></p>
+          </div>
+          <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-500 shadow-md shadow-emerald-500/30">
+            <svg class="h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" /><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" /></svg>
+          </div>
+        </div>
+        <div class="flex items-center gap-x-1.5 mb-3">
+          <span class="inline-flex items-center gap-x-1 text-xs font-bold text-emerald-600">
+            <svg class="h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18" /></svg>
+            +4.2%
+          </span>
+          <span class="text-xs text-slate-400">vs last month</span>
+        </div>
+        <div class="h-1.5 w-full rounded-full bg-slate-100 overflow-hidden">
+          <div class="h-full rounded-full bg-emerald-500" style="width:78%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MIDDLE ROW ── -->
+    <div class="grid grid-cols-3 gap-5">
+
+      <!-- Bench Alerts — col-span-2 -->
+      <div class="col-span-2 overflow-hidden rounded-2xl bg-white border border-slate-200/80 shadow-sm">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+          <div class="flex items-center gap-x-3">
+            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-red-50">
+              <svg class="h-4 w-4 text-red-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" /></svg>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-slate-900">Bench Alerts</h3>
+              <p class="text-xs text-slate-400">Engineers predicted to bench within 30 days</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-x-3">
+            <span class="rounded-full bg-red-100 px-2.5 py-1 text-xs font-bold text-red-700">5 at risk</span>
+            <a href="bench-forecast.html" class="text-xs font-semibold text-indigo-600 hover:text-indigo-700 hover:underline transition-colors">View all →</a>
+          </div>
+        </div>
+        <table class="min-w-full">
+          <thead>
+            <tr class="bg-slate-50/70">
+              <th class="px-6 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-slate-400">Engineer</th>
+              <th class="px-6 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-slate-400">Bench Start</th>
+              <th class="px-6 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-slate-400">Days Until Bench</th>
+              <th class="px-6 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-slate-400">Risk Level</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            <tr class="hover:bg-red-50/30 transition-colors">
+              <td class="px-6 py-3.5">
+                <div class="flex items-center gap-x-3">
+                  <div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-red-100 text-[11px] font-bold text-red-700">SJ</div>
+                  <span class="text-sm font-semibold text-slate-900">Sarah Johnson</span>
+                </div>
+              </td>
+              <td class="px-6 py-3.5 text-sm text-slate-500">On Bench Now</td>
+              <td class="px-6 py-3.5">
+                <span class="inline-flex items-center gap-x-1 rounded-lg bg-red-100 px-2.5 py-1 text-xs font-bold text-red-700">
+                  <span class="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse"></span>
+                  0 days
+                </span>
+              </td>
+              <td class="px-6 py-3.5"><span class="inline-flex items-center gap-x-1.5 rounded-full bg-red-100 px-2.5 py-1 text-[11px] font-bold text-red-700"><span class="h-1.5 w-1.5 rounded-full bg-red-500"></span>High</span></td>
+            </tr>
+            <tr class="hover:bg-red-50/30 transition-colors">
+              <td class="px-6 py-3.5"><div class="flex items-center gap-x-3"><div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-orange-100 text-[11px] font-bold text-orange-700">RP</div><span class="text-sm font-semibold text-slate-900">Raj Patel</span></div></td>
+              <td class="px-6 py-3.5 text-sm text-slate-500">On Bench Now</td>
+              <td class="px-6 py-3.5"><span class="inline-flex items-center gap-x-1 rounded-lg bg-red-100 px-2.5 py-1 text-xs font-bold text-red-700"><span class="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse"></span>0 days</span></td>
+              <td class="px-6 py-3.5"><span class="inline-flex items-center gap-x-1.5 rounded-full bg-red-100 px-2.5 py-1 text-[11px] font-bold text-red-700"><span class="h-1.5 w-1.5 rounded-full bg-red-500"></span>High</span></td>
+            </tr>
+            <tr class="hover:bg-red-50/30 transition-colors">
+              <td class="px-6 py-3.5"><div class="flex items-center gap-x-3"><div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-teal-100 text-[11px] font-bold text-teal-700">DC</div><span class="text-sm font-semibold text-slate-900">David Chen</span></div></td>
+              <td class="px-6 py-3.5 text-sm text-slate-500">Mar 28, 2025</td>
+              <td class="px-6 py-3.5"><span class="text-sm font-bold text-red-600 tabular-nums">5 days</span></td>
+              <td class="px-6 py-3.5"><span class="inline-flex items-center gap-x-1.5 rounded-full bg-red-100 px-2.5 py-1 text-[11px] font-bold text-red-700"><span class="h-1.5 w-1.5 rounded-full bg-red-500"></span>High</span></td>
+            </tr>
+            <tr class="hover:bg-amber-50/30 transition-colors">
+              <td class="px-6 py-3.5"><div class="flex items-center gap-x-3"><div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-[11px] font-bold text-indigo-700">LN</div><span class="text-sm font-semibold text-slate-900">Linh Nguyen</span></div></td>
+              <td class="px-6 py-3.5 text-sm text-slate-500">Apr 15, 2025</td>
+              <td class="px-6 py-3.5"><span class="text-sm font-bold text-amber-600 tabular-nums">15 days</span></td>
+              <td class="px-6 py-3.5"><span class="inline-flex items-center gap-x-1.5 rounded-full bg-amber-100 px-2.5 py-1 text-[11px] font-bold text-amber-700"><span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>Medium</span></td>
+            </tr>
+            <tr class="hover:bg-amber-50/30 transition-colors">
+              <td class="px-6 py-3.5"><div class="flex items-center gap-x-3"><div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-violet-100 text-[11px] font-bold text-violet-700">PS</div><span class="text-sm font-semibold text-slate-900">Priya Sharma</span></div></td>
+              <td class="px-6 py-3.5 text-sm text-slate-500">May 2, 2025</td>
+              <td class="px-6 py-3.5"><span class="text-sm font-bold text-amber-600 tabular-nums">32 days</span></td>
+              <td class="px-6 py-3.5"><span class="inline-flex items-center gap-x-1.5 rounded-full bg-amber-100 px-2.5 py-1 text-[11px] font-bold text-amber-700"><span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>Medium</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Sidebar cards -->
+      <div class="flex flex-col gap-y-4">
+        <!-- Utilization -->
+        <div class="rounded-2xl bg-white border border-slate-200/80 shadow-sm p-5">
+          <h3 class="text-sm font-bold text-slate-900 mb-4"></h3>
+          <div class="space-y-3">
+            <div>
+              <div class="flex items-center justify-between text-xs mb-1.5">
+                <span class="font-semibold text-slate-700">Allocated Engineers</span>
+                <span class="font-bold text-slate-900">19 / 24</span>
+              </div>
+              <div class="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
+                <div class="h-full rounded-full" style="width:79%;background:linear-gradient(90deg,#4f46e5,#6366f1)"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex items-center justify-between text-xs mb-1.5">
+                <span class="font-semibold text-slate-700">On Bench</span>
+                <span class="font-bold text-slate-900">5 / 24</span>
+              </div>
+              <div class="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
+                <div class="h-full rounded-full bg-red-500" style="width:21%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex items-center justify-between text-xs mb-1.5">
+                <span class="font-semibold text-slate-700">Partially Available</span>
+                <span class="font-bold text-slate-900">3 / 24</span>
+              </div>
+              <div class="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
+                <div class="h-full rounded-full bg-amber-400" style="width:12%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project status -->
+        <div class="rounded-2xl bg-white border border-slate-200/80 shadow-sm p-5 flex-1">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-bold text-slate-900">Project Status</h3>
+            <a href="projects.html" class="text-xs font-semibold text-indigo-600 hover:underline">View all →</a>
+          </div>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between rounded-lg bg-emerald-50 border border-emerald-100 px-3 py-2.5">
+              <div class="flex items-center gap-x-2">
+                <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+                <span class="text-xs font-semibold text-emerald-800">Active</span>
+              </div>
+              <span class="text-lg font-black text-emerald-700">3</span>
+            </div>
+            <div class="flex items-center justify-between rounded-lg bg-blue-50 border border-blue-100 px-3 py-2.5">
+              <div class="flex items-center gap-x-2">
+                <span class="h-2 w-2 rounded-full bg-blue-500"></span>
+                <span class="text-xs font-semibold text-blue-800">Planned</span>
+              </div>
+              <span class="text-lg font-black text-blue-700">2</span>
+            </div>
+            <div class="flex items-center justify-between rounded-lg bg-slate-50 border border-slate-200 px-3 py-2.5">
+              <div class="flex items-center gap-x-2">
+                <span class="h-2 w-2 rounded-full bg-slate-400"></span>
+                <span class="text-xs font-semibold text-slate-600">Closed</span>
+              </div>
+              <span class="text-lg font-black text-slate-500">3</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── RECENT ALLOCATIONS ── -->
+    <div class="overflow-hidden rounded-2xl bg-white border border-slate-200/80 shadow-sm">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+        <div class="flex items-center gap-x-3">
+          <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50">
+            <svg class="h-4 w-4 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" /></svg>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-slate-900">Recent Allocations</h3>
+            <p class="text-xs text-slate-400">Active engineer–project assignments</p>
+          </div>
+        </div>
+        <a href="allocation.html" class="flex items-center gap-x-1.5 rounded-lg border border-indigo-200 bg-indigo-50 px-3 py-1.5 text-xs font-semibold text-indigo-600 hover:bg-indigo-100 transition-colors">
+          Manage Allocations
+          <svg class="h-3.5 w-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+        </a>
+      </div>
+      <table class="min-w-full">
+        <thead>
+          <tr class="bg-slate-50/70">
+            <th class="px-6 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-slate-400">Engineer</th>
+            <th class="px-6 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-slate-400">Project</th>
+            <th class="px-6 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-slate-400">Allocation</th>
+            <th class="px-6 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-slate-400">Start Date</th>
+            <th class="px-6 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-slate-400">End Date</th>
+            <th class="px-6 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-slate-400">Status</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          <tr class="bg-indigo-50/20 hover:bg-indigo-50/40 transition-colors">
+            <td class="px-6 py-4"><div class="flex items-center gap-x-3"><div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-indigo-700">LN</div><div><p class="text-sm font-semibold text-slate-900">Linh Nguyen</p><p class="text-xs text-slate-400">Senior · Python/ML</p></div></div></td>
+            <td class="px-6 py-4"><div class="flex items-center gap-x-2"><div class="h-2 w-2 rounded-full bg-emerald-500"></div><span class="text-sm font-medium text-slate-700">Project Helios</span></div></td>
+            <td class="px-6 py-4">
+              <div class="flex items-center gap-x-2.5">
+                <div class="h-1.5 w-20 rounded-full bg-slate-200 overflow-hidden"><div class="h-full rounded-full bg-indigo-500" style="width:80%"></div></div>
+                <span class="text-sm font-bold text-slate-900 tabular-nums">80%</span>
+              </div>
+            </td>
+            <td class="px-6 py-4 text-sm text-slate-500">Jan 15, 2025</td>
+            <td class="px-6 py-4 text-sm text-slate-500">Dec 31, 2025</td>
+            <td class="px-6 py-4"><span class="inline-flex items-center gap-x-1.5 rounded-full bg-emerald-100 px-2.5 py-1 text-[11px] font-bold text-emerald-700"><span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>Active</span></td>
+          </tr>
+          <tr class="hover:bg-slate-50/50 transition-colors">
+            <td class="px-6 py-4"><div class="flex items-center gap-x-3"><div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-700">MW</div><div><p class="text-sm font-semibold text-slate-900">Marcus Webb</p><p class="text-xs text-slate-400">Mid · React/Node</p></div></div></td>
+            <td class="px-6 py-4"><div class="flex items-center gap-x-2"><div class="h-2 w-2 rounded-full bg-emerald-500"></div><span class="text-sm font-medium text-slate-700">Atlas Platform</span></div></td>
+            <td class="px-6 py-4"><div class="flex items-center gap-x-2.5"><div class="h-1.5 w-20 rounded-full bg-slate-200 overflow-hidden"><div class="h-full rounded-full bg-indigo-500" style="width:100%"></div></div><span class="text-sm font-bold text-slate-900 tabular-nums">100%</span></div></td>
+            <td class="px-6 py-4 text-sm text-slate-500">Mar 1, 2025</td>
+            <td class="px-6 py-4 text-sm text-slate-500">Sep 30, 2025</td>
+            <td class="px-6 py-4"><span class="inline-flex items-center gap-x-1.5 rounded-full bg-emerald-100 px-2.5 py-1 text-[11px] font-bold text-emerald-700"><span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>Active</span></td>
+          </tr>
+          <tr class="hover:bg-slate-50/50 transition-colors">
+            <td class="px-6 py-4"><div class="flex items-center gap-x-3"><div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-pink-100 text-xs font-bold text-pink-700">EC</div><div><p class="text-sm font-semibold text-slate-900">Emma Clark</p><p class="text-xs text-slate-400">Mid · React/TypeScript</p></div></div></td>
+            <td class="px-6 py-4"><div class="flex items-center gap-x-2"><div class="h-2 w-2 rounded-full bg-emerald-500"></div><span class="text-sm font-medium text-slate-700">Atlas Platform</span></div></td>
+            <td class="px-6 py-4"><div class="flex items-center gap-x-2.5"><div class="h-1.5 w-20 rounded-full bg-slate-200 overflow-hidden"><div class="h-full rounded-full bg-indigo-500" style="width:100%"></div></div><span class="text-sm font-bold text-slate-900 tabular-nums">100%</span></div></td>
+            <td class="px-6 py-4 text-sm text-slate-500">Mar 1, 2025</td>
+            <td class="px-6 py-4 text-sm text-slate-500">Sep 30, 2025</td>
+            <td class="px-6 py-4"><span class="inline-flex items-center gap-x-1.5 rounded-full bg-emerald-100 px-2.5 py-1 text-[11px] font-bold text-emerald-700"><span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>Active</span></td>
+          </tr>
+          <tr class="hover:bg-slate-50/50 transition-colors">
+            <td class="px-6 py-4"><div class="flex items-center gap-x-3"><div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-xs font-bold text-emerald-700">AH</div><div><p class="text-sm font-semibold text-slate-900">Amir Hossein</p><p class="text-xs text-slate-400">Senior · Python/FastAPI</p></div></div></td>
+            <td class="px-6 py-4"><div class="flex items-center gap-x-2"><div class="h-2 w-2 rounded-full bg-emerald-500"></div><span class="text-sm font-medium text-slate-700">Project Helios</span></div></td>
+            <td class="px-6 py-4"><div class="flex items-center gap-x-2.5"><div class="h-1.5 w-20 rounded-full bg-slate-200 overflow-hidden"><div class="h-full rounded-full bg-indigo-500" style="width:40%"></div></div><span class="text-sm font-bold text-slate-900 tabular-nums">40%</span></div></td>
+            <td class="px-6 py-4 text-sm text-slate-500">Feb 1, 2025</td>
+            <td class="px-6 py-4 text-sm text-slate-500">Aug 31, 2025</td>
+            <td class="px-6 py-4"><span class="inline-flex items-center gap-x-1.5 rounded-full bg-emerald-100 px-2.5 py-1 text-[11px] font-bold text-emerald-700"><span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>Active</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="border-t border-slate-100 bg-slate-50/50 px-6 py-3 flex items-center justify-between">
+        <p class="text-xs text-slate-400">Showing 4 of 4 active allocations</p>
+        <p class="text-xs text-slate-400">Updated Mar 31, 2025 · 14:30</p>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+</body>
+</html>

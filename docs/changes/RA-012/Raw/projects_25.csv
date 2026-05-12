@@ -1,0 +1,26 @@
+name,description,required_skills,required_level,headcount,status,start_date,end_date
+AI Platform Modernization,Upgrade internal AI platform for model serving and monitoring,"Python,ML,Data",senior,3,active,2026-04-01,2026-10-31
+Frontend Revamp Portal,Rewrite customer portal UI with modern component architecture,"JavaScript,React,TypeScript",mid,4,active,2026-05-01,2026-11-30
+Backend Microservice Migration,Migrate monolith modules to Java microservices,"Java,Spring Boot,Microservices",senior,5,active,2026-03-15,2026-12-15
+DevOps CI Pipeline Upgrade,Improve CI/CD performance and deployment reliability,"DevOps,Docker,CI/CD",mid,2,active,2026-04-10,2026-08-31
+Data Lake ETL Refresh,Rebuild ETL jobs and optimize warehouse ingestion,"Data,SQL,Airflow",senior,3,active,2026-02-01,2026-09-30
+QA Automation Expansion,Expand automated regression coverage for core services,"QA,Cypress,API Testing",mid,2,planned,2026-06-01,2026-10-15
+ML Forecasting Engine,Develop bench forecasting engine with feature pipelines,"Python,ML,Pandas",senior,3,active,2026-04-20,2026-12-20
+React Design System,Build shared frontend components and design tokens,"JavaScript,React,Node.js",mid,3,planned,2026-06-10,2026-11-10
+Kubernetes Platform Hardening,Harden cluster security and workload policies,"DevOps,Kubernetes,AWS",senior,2,active,2026-03-01,2026-08-15
+Customer Analytics Pipeline,Create analytics data flows for customer insights,"Data,Python,Spark",senior,4,active,2026-04-05,2026-11-25
+Mobile API Stabilization,Stabilize backend APIs used by mobile applications,"Java,Spring Boot,Kafka",mid,3,active,2026-05-15,2026-09-30
+Playwright E2E Rollout,Introduce end-to-end UI coverage for major journeys,"QA,Playwright,JavaScript",mid,2,planned,2026-07-01,2026-10-31
+Internal Chatbot Knowledge Base,Build retrieval workflows for internal assistant,"Python,FastAPI,Data",mid,3,planned,2026-06-20,2026-12-01
+Cloud Cost Optimization,Reduce cloud spend through rightsizing and observability,"DevOps,AWS,Terraform",senior,2,active,2026-04-12,2026-09-15
+Legacy UI Angular Support,Maintain and improve legacy Angular administrative pages,"JavaScript,Angular,Node.js",mid,2,active,2026-03-20,2026-08-30
+Fraud Detection Data Mart,Prepare curated datasets for fraud and anomaly analysis,"Data,SQL,Python",senior,3,planned,2026-07-05,2026-12-20
+Recommendation Service API,Create recommendation APIs backed by match scoring,"Python,FastAPI,Redis",senior,3,active,2026-04-18,2026-10-20
+Observability Logging Upgrade,"Improve logs, metrics and tracing across services","DevOps,Docker,Kubernetes",mid,2,planned,2026-06-05,2026-09-30
+Enterprise SSO Integration,Add SSO and strengthen auth controls for enterprise clients,"Java,Spring Security,Microservices",senior,3,active,2026-05-01,2026-11-15
+Data Quality Rules Engine,Implement validation rules and monitoring for source data,"Data,SQL,Airflow",mid,2,active,2026-04-22,2026-09-10
+Frontend Performance Optimization,Improve rendering speed and bundle performance,"JavaScript,React,Vue",mid,3,active,2026-05-10,2026-10-10
+Test Environment Provisioning,Automate test environment setup for QA and dev teams,"DevOps,Docker,Terraform",mid,2,planned,2026-06-15,2026-10-01
+Pricing Engine Refactor,Refactor pricing calculation services for maintainability,"Java,Spring Boot,Microservices",senior,4,planned,2026-07-10,2026-12-15
+NLP Search Enhancement,Improve semantic search quality for internal tools,"Python,ML,FastAPI",senior,3,active,2026-04-25,2026-11-30
+Regression Suite Maintenance,Maintain and expand nightly regression suite,"QA,Selenium,Cypress",junior,2,active,2026-05-20,2026-12-31

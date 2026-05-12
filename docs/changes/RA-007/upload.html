@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Import — ResourceAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300..900;1,14..32,300..900&display=swap" rel="stylesheet" />
+  <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','ui-sans-serif']}}}}</script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    [x-cloak]{display:none!important}
+    .sidebar-bg{background:linear-gradient(180deg,#0f172a 0%,#0f172a 60%,#111827 100%)}
+    .sidebar-scroll::-webkit-scrollbar{width:3px}
+    .sidebar-scroll::-webkit-scrollbar-track{background:transparent}
+    .sidebar-scroll::-webkit-scrollbar-thumb{background:#1e293b;border-radius:999px}
+  </style>
+</head>
+<body class="bg-slate-100 font-sans antialiased" style="min-width:1280px">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar-bg fixed inset-y-0 left-0 z-40 flex w-64 flex-col">
+    <div class="flex h-16 shrink-0 items-center gap-x-3 px-6 border-b border-white/5">
+      <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 shadow-lg shadow-indigo-500/40">
+        <svg class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/>
+        </svg>
+      </div>
+      <span class="text-[15px] font-bold text-white tracking-tight">ResourceAI</span>
+    </div>
+    <nav class="sidebar-scroll flex-1 overflow-y-auto px-3 py-4 space-y-5">
+      <div>
+        <p class="mb-1.5 px-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">Main</p>
+        <a href="dashboard.html" class="flex items-center gap-x-3 rounded-xl px-3 py-2.5 text-slate-400 hover:bg-white/5 hover:text-white transition-colors">
+          <svg class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/>
+          </svg>
+          <span class="text-sm font-medium">Dashboard</span>
+        </a>
+      </div>
+      <div>
+        <p class="mb-1.5 px-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">Workspace</p>
+        <div class="space-y-0.5">
+          <a href="engineers.html" class="flex items-center gap-x-3 rounded-xl px-3 py-2.5 text-slate-400 hover:bg-white/5 hover:text-white transition-colors">
+            <svg class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/>
+            </svg>
+            <span class="text-sm font-medium">Engineers</span>
+          </a>
+          <a href="projects.html" class="flex items-center gap-x-3 rounded-xl px-3 py-2.5 text-slate-400 hover:bg-white/5 hover:text-white transition-colors">
+            <svg class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"/>
+            </svg>
+            <span class="text-sm font-medium">Projects</span>
+          </a>
+          <a href="allocation.html" class="flex items-center gap-x-3 rounded-xl px-3 py-2.5 text-slate-400 hover:bg-white/5 hover:text-white transition-colors">
+            <svg class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"/>
+            </svg>
+            <span class="text-sm font-medium">Allocation</span>
+          </a>
+          <a href="upload.html" class="flex items-center gap-x-3 rounded-xl px-3 py-2.5 bg-indigo-600 text-white shadow-md shadow-indigo-500/30">
+            <svg class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
+            </svg>
+            <span class="text-sm font-medium">Upload Data</span>
+          </a>
+        </div>
+      </div>
+      <div>
+        <p class="mb-1.5 px-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">Analytics</p>
+        <div class="space-y-0.5">
+          <a href="bench-forecast.html" class="flex items-center gap-x-3 rounded-xl px-3 py-2.5 text-slate-400 hover:bg-white/5 hover:text-white transition-colors">
+            <svg class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/>
+            </svg>
+            <span class="text-sm font-medium flex-1">Bench Forecast</span>
+            <span class="rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] font-bold text-white">5</span>
+          </a>
+          <a href="reports.html" class="flex items-center gap-x-3 rounded-xl px-3 py-2.5 text-slate-400 hover:bg-white/5 hover:text-white transition-colors">
+            <svg class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z"/>
+            </svg>
+            <span class="text-sm font-medium">Reports</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div class="shrink-0 border-t border-white/5 px-3 py-3">
+      <div class="flex items-center gap-x-3 rounded-xl px-3 py-2.5 hover:bg-white/5 transition-colors cursor-pointer">
+        <div class="relative shrink-0">
+          <div class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-indigo-400 to-indigo-600 text-xs font-bold text-white">JD</div>
+          <span class="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-400 ring-2 ring-slate-900"></span>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-semibold text-white truncate">John Doe</p>
+          <p class="text-[11px] text-slate-400 truncate">Administrator</p>
+        </div>
+        <svg class="h-4 w-4 text-slate-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"/>
+        </svg>
+      </div>
+    </div>
+  </aside>
+
+  <!-- HEADER -->
+  <header class="fixed left-64 right-0 top-0 z-30 flex h-16 items-center gap-x-4 border-b border-slate-200/80 bg-white/95 px-6 backdrop-blur">
+    <div class="flex flex-1 flex-col justify-center">
+      <nav class="flex items-center gap-x-1 text-xs text-slate-400">
+        <span>ResourceAI</span>
+        <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+        <span class="text-slate-600 font-medium">Upload Data</span>
+      </nav>
+      <h1 class="text-[15px] font-bold text-slate-900 leading-tight">Data Import</h1>
+    </div>
+    <div class="flex items-center gap-x-3">
+      <button class="relative flex h-9 w-9 items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors">
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/>
+        </svg>
+        <span class="absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full bg-red-500"></span>
+      </button>
+      <div class="flex items-center gap-x-2 rounded-xl border border-slate-200 bg-white px-3 py-1.5 shadow-sm">
+        <div class="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-indigo-400 to-indigo-600 text-[10px] font-bold text-white">JD</div>
+        <span class="text-sm font-semibold text-slate-700">John Doe</span>
+        <span class="rounded-full bg-violet-100 px-2 py-0.5 text-[10px] font-bold text-violet-700">Admin</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="ml-64 pt-16">
+    <div class="px-6 py-7 space-y-6">
+
+      <!-- INFO BANNER -->
+      <div class="rounded-2xl border border-blue-200 bg-blue-50 px-5 py-4">
+        <div class="flex items-start gap-x-3">
+          <svg class="h-5 w-5 text-blue-500 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"/>
+          </svg>
+          <div class="flex-1">
+            <p class="text-sm font-bold text-blue-800">CSV Format Guidelines</p>
+            <div class="mt-2 grid grid-cols-2 gap-x-8 gap-y-1 text-xs text-blue-700">
+              <div>
+                <p class="font-bold text-blue-800 mb-1">Engineers CSV — required columns:</p>
+                <p><code class="font-mono bg-blue-100 rounded px-1">employee_id</code>, <code class="font-mono bg-blue-100 rounded px-1">name</code>, <code class="font-mono bg-blue-100 rounded px-1">email</code>, <code class="font-mono bg-blue-100 rounded px-1">level</code>, <code class="font-mono bg-blue-100 rounded px-1">skills</code>, <code class="font-mono bg-blue-100 rounded px-1">department</code></p>
+              </div>
+              <div>
+                <p class="font-bold text-blue-800 mb-1">Projects CSV — required columns:</p>
+                <p><code class="font-mono bg-blue-100 rounded px-1">project_id</code>, <code class="font-mono bg-blue-100 rounded px-1">name</code>, <code class="font-mono bg-blue-100 rounded px-1">status</code>, <code class="font-mono bg-blue-100 rounded px-1">start_date</code>, <code class="font-mono bg-blue-100 rounded px-1">end_date</code>, <code class="font-mono bg-blue-100 rounded px-1">required_skills</code></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TWO UPLOAD ZONES -->
+      <div class="grid grid-cols-2 gap-6">
+
+        <!-- UPLOAD ZONE 1 — Engineers CSV (state: selected) -->
+        <div class="rounded-2xl bg-white border border-slate-200/80 shadow-sm overflow-hidden"
+          x-data="{ state: 'selected', fileName: 'engineers_march_2025.csv', fileSize: '2.4 MB', dragging: false }">
+          <!-- Card header -->
+          <div class="flex items-center gap-x-4 px-6 py-5 border-b border-slate-100">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-600 shadow-md shadow-indigo-500/20">
+              <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-bold text-slate-900">Engineers CSV</p>
+              <p class="text-xs text-slate-400">Import or update engineer profiles</p>
+            </div>
+            <span class="ml-auto inline-flex items-center gap-x-1.5 rounded-full bg-indigo-100 px-2.5 py-1 text-[11px] font-bold text-indigo-700">
+              <span class="h-1.5 w-1.5 rounded-full bg-indigo-500"></span>
+              Ready
+            </span>
+          </div>
+          <!-- Body -->
+          <div class="p-6 space-y-4">
+            <!-- Drop zone -->
+            <div class="rounded-2xl border-2 border-dashed p-10 text-center transition-colors"
+              :class="dragging ? 'border-indigo-400 bg-indigo-50' : 'border-indigo-300 bg-indigo-50/50'"
+              @dragover.prevent="dragging = true"
+              @dragleave.prevent="dragging = false"
+              @drop.prevent="dragging = false">
+              <div class="flex flex-col items-center">
+                <svg class="h-12 w-12 text-indigo-400 mb-3" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"/>
+                </svg>
+                <p class="text-sm font-bold text-slate-700">Drop your CSV file here</p>
+                <p class="text-xs text-slate-500 mt-1">or <button class="text-indigo-600 font-semibold hover:underline">browse to upload</button></p>
+                <p class="text-[11px] text-slate-400 mt-2 font-medium">Accepts .csv files · Max 10MB</p>
+              </div>
+            </div>
+            <!-- Selected file chip -->
+            <div x-show="state === 'selected'" class="flex items-center gap-x-3 rounded-xl bg-indigo-50 border border-indigo-200 px-4 py-3">
+              <svg class="h-5 w-5 text-indigo-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
+              </svg>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-semibold text-slate-800 truncate" x-text="fileName"></p>
+                <p class="text-xs text-slate-500" x-text="fileSize"></p>
+              </div>
+              <button @click="state = 'idle'; fileName = ''" class="flex h-6 w-6 items-center justify-center rounded-lg text-slate-400 hover:bg-indigo-100 hover:text-slate-600 transition-colors">
+                <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              </button>
+            </div>
+            <!-- Upload button -->
+            <button class="flex w-full items-center justify-center gap-x-2 rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-sm shadow-indigo-500/20 hover:bg-indigo-700 transition-colors"
+              :class="state !== 'selected' ? 'opacity-50 cursor-not-allowed' : ''"
+              :disabled="state !== 'selected'">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
+              </svg>
+              Upload Engineers CSV
+            </button>
+          </div>
+        </div>
+
+        <!-- UPLOAD ZONE 2 — Projects CSV (state: success) -->
+        <div class="rounded-2xl bg-white border border-slate-200/80 shadow-sm overflow-hidden"
+          x-data="{ state: 'success', fileName: 'projects_q2_2025.csv' }">
+          <!-- Card header -->
+          <div class="flex items-center gap-x-4 px-6 py-5 border-b border-slate-100">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-600 shadow-md shadow-emerald-500/20">
+              <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-bold text-slate-900">Projects CSV</p>
+              <p class="text-xs text-slate-400">Import or update project records</p>
+            </div>
+            <span class="ml-auto inline-flex items-center gap-x-1.5 rounded-full bg-emerald-100 px-2.5 py-1 text-[11px] font-bold text-emerald-700">
+              <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+              Imported
+            </span>
+          </div>
+          <!-- Body — SUCCESS STATE -->
+          <div class="p-6 space-y-5" x-show="state === 'success'">
+            <!-- Success header card -->
+            <div class="rounded-xl bg-emerald-50 border border-emerald-200 p-4">
+              <div class="flex items-center gap-x-4">
+                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-100">
+                  <svg class="h-7 w-7 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                </div>
+                <div>
+                  <p class="text-base font-black text-emerald-800">Import Successful</p>
+                  <p class="text-xs font-semibold text-emerald-600 mt-0.5" x-text="fileName"></p>
+                  <p class="text-[11px] text-emerald-500 mt-0.5">Mar 31, 2025 at 14:23 UTC</p>
+                </div>
+              </div>
+            </div>
+            <!-- Import summary grid 2x2 -->
+            <div class="grid grid-cols-2 gap-3">
+              <div class="rounded-xl border border-slate-100 bg-slate-50 p-4">
+                <p class="text-2xl font-black text-slate-900">5</p>
+                <p class="text-xs font-semibold text-slate-500 mt-0.5">Rows Inserted</p>
+              </div>
+              <div class="rounded-xl border border-blue-100 bg-blue-50 p-4">
+                <p class="text-2xl font-black text-blue-600">2</p>
+                <p class="text-xs font-semibold text-blue-500 mt-0.5">Rows Updated</p>
+              </div>
+              <div class="rounded-xl border border-amber-100 bg-amber-50 p-4">
+                <p class="text-2xl font-black text-amber-600">1</p>
+                <p class="text-xs font-semibold text-amber-500 mt-0.5">Rows Skipped</p>
+              </div>
+              <div class="rounded-xl border border-emerald-100 bg-emerald-50 p-4">
+                <p class="text-2xl font-black text-emerald-600">0</p>
+                <p class="text-xs font-semibold text-emerald-500 mt-0.5">Errors</p>
+              </div>
+            </div>
+            <!-- Import log -->
+            <div class="rounded-xl bg-slate-50 border border-slate-200 p-4">
+              <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-3">Import Log</p>
+              <div class="space-y-2">
+                <div class="flex items-start gap-x-2">
+                  <span class="mt-0.5 h-4 w-4 shrink-0 flex items-center justify-center rounded-full bg-emerald-100">
+                    <svg class="h-2.5 w-2.5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                  </span>
+                  <p class="text-xs text-slate-600"><span class="font-semibold">Inserted:</span> Project Helios, Orion Pipeline, Titan Analytics, Nova Backend, Aurora ML</p>
+                </div>
+                <div class="flex items-start gap-x-2">
+                  <span class="mt-0.5 h-4 w-4 shrink-0 flex items-center justify-center rounded-full bg-blue-100">
+                    <svg class="h-2.5 w-2.5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>
+                  </span>
+                  <p class="text-xs text-slate-600"><span class="font-semibold">Updated:</span> Project Vega (dates updated), Project Sol (status changed to Completed)</p>
+                </div>
+                <div class="flex items-start gap-x-2">
+                  <span class="mt-0.5 h-4 w-4 shrink-0 flex items-center justify-center rounded-full bg-amber-100">
+                    <svg class="h-2.5 w-2.5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
+                  </span>
+                  <p class="text-xs text-slate-600"><span class="font-semibold">Skipped:</span> Row 8 — duplicate project_id PRJ-0009 (already exists, no changes detected)</p>
+                </div>
+              </div>
+            </div>
+            <!-- Upload another -->
+            <button @click="state = 'idle'" class="flex w-full items-center justify-center gap-x-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
+              </svg>
+              Upload Another File
+            </button>
+          </div>
+          <!-- Body — IDLE STATE (fallback) -->
+          <div class="p-6 space-y-4" x-show="state !== 'success'">
+            <div class="rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50/50 p-10 text-center">
+              <svg class="h-12 w-12 text-slate-300 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"/>
+              </svg>
+              <p class="text-sm font-bold text-slate-500">Drop your CSV file here</p>
+              <p class="text-xs text-slate-400 mt-1">or <button class="text-indigo-600 font-semibold hover:underline">browse to upload</button></p>
+              <p class="text-[11px] text-slate-400 mt-2">Accepts .csv files · Max 10MB</p>
+            </div>
+            <button class="flex w-full items-center justify-center gap-x-2 rounded-xl bg-slate-200 px-4 py-3 text-sm font-semibold text-slate-400 cursor-not-allowed">
+              Upload Projects CSV
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- CSV COLUMN REFERENCE CARD -->
+      <div class="rounded-2xl bg-white border border-slate-200/80 shadow-sm overflow-hidden">
+        <div class="flex items-center gap-x-3 px-6 py-5 border-b border-slate-100">
+          <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100">
+            <svg class="h-4 w-4 text-slate-600" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
+            </svg>
+          </div>
+          <h3 class="text-sm font-bold text-slate-900">CSV Column Reference</h3>
+          <span class="text-xs text-slate-400">Use these exact column headers in your CSV files</span>
+        </div>
+        <div class="grid grid-cols-2 divide-x divide-slate-100 p-6 gap-0">
+
+          <!-- Engineers columns -->
+          <div class="pr-8">
+            <div class="flex items-center gap-x-2 mb-4">
+              <div class="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-100">
+                <svg class="h-3.5 w-3.5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/>
+                </svg>
+              </div>
+              <p class="text-sm font-bold text-slate-800">Engineers CSV Columns</p>
+            </div>
+            <div class="space-y-2.5">
+              <div class="flex items-center justify-between py-2 border-b border-slate-50">
+                <code class="rounded-md bg-slate-100 px-2 py-1 text-xs font-mono font-semibold text-slate-700">employee_id</code>
+                <div class="flex items-center gap-x-2">
+                  <span class="text-xs text-slate-400">e.g. ENG-0001</span>
+                  <span class="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold text-red-600">required</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between py-2 border-b border-slate-50">
+                <code class="rounded-md bg-slate-100 px-2 py-1 text-xs font-mono font-semibold text-slate-700">full_name</code>
+                <div class="flex items-center gap-x-2">
+                  <span class="text-xs text-slate-400">e.g. Linh Nguyen</span>
+                  <span class="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold text-red-600">required</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between py-2 border-b border-slate-50">
+                <code class="rounded-md bg-slate-100 px-2 py-1 text-xs font-mono font-semibold text-slate-700">email</code>
+                <div class="flex items-center gap-x-2">
+                  <span class="text-xs text-slate-400">e.g. linh@company.io</span>
+                  <span class="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold text-red-600">required</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between py-2 border-b border-slate-50">
+                <code class="rounded-md bg-slate-100 px-2 py-1 text-xs font-mono font-semibold text-slate-700">level</code>
+                <div class="flex items-center gap-x-2">
+                  <span class="text-xs text-slate-400">junior / mid / senior / lead</span>
+                  <span class="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold text-red-600">required</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between py-2 border-b border-slate-50">
+                <code class="rounded-md bg-slate-100 px-2 py-1 text-xs font-mono font-semibold text-slate-700">skills</code>
+                <div class="flex items-center gap-x-2">
+                  <span class="text-xs text-slate-400">semicolon-separated</span>
+                  <span class="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold text-red-600">required</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between py-2 border-b border-slate-50">
+                <code class="rounded-md bg-slate-100 px-2 py-1 text-xs font-mono font-semibold text-slate-700">department</code>
+                <div class="flex items-center gap-x-2">
+                  <span class="text-xs text-slate-400">e.g. AI &amp; Data Science</span>
+                  <span class="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold text-red-600">required</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between py-2 border-b border-slate-50">
+                <code class="rounded-md bg-slate-100 px-2 py-1 text-xs font-mono font-semibold text-slate-700">manager</code>
+                <div class="flex items-center gap-x-2">
+                  <span class="text-xs text-slate-400">manager name</span>
+                  <span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-500">optional</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between py-2 border-b border-slate-50">
+                <code class="rounded-md bg-slate-100 px-2 py-1 text-xs font-mono font-semibold text-slate-700">joined_date</code>
+                <div class="flex items-center gap-x-2">
+                  <span class="text-xs text-slate-400">YYYY-MM-DD</span>
+                  <span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-500">optional</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between py-2">
+                <code class="rounded-md bg-slate-100 px-2 py-1 text-xs font-mono font-semibold text-slate-700">location</code>
+                <div class="flex items-center gap-x-2">
+                  <span class="text-xs text-slate-400">city, country</span>
+                  <span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-500">optional</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Projects columns -->
+          <div class="pl-8">
+            <div class="flex items-center gap-x-2 mb-4">
+              <div class="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-100">
+                <svg class="h-3.5 w-3.5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"/>
+                </svg>
+              </div>
+              <p class="text-sm font-bold text-slate-800">Projects CSV Columns</p>
+            </div>
+            <div class="space-y-2.5">
+              <div class="flex items-center justify-between py-2 border-b border-slate-50">
+                <code class="rounded-md bg-slate-100 px-2 py-1 text-xs font-mono font-semibold text-slate-700">project_id</code>
+                <div class="flex items-center gap-x-2">
+                  <span class="text-xs text-slate-400">e.g. PRJ-0015</span>
+                  <span class="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold text-red-600">required</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between py-2 border-b border-slate-50">
+                <code class="rounded-md bg-slate-100 px-2 py-1 text-xs font-mono font-semibold text-slate-700">project_name</code>
+                <div class="flex items-center gap-x-2">
+                  <span class="text-xs text-slate-400">e.g. Project Helios</span>
+                  <span class="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold text-red-600">required</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between py-2 border-b border-slate-50">
+                <code class="rounded-md bg-slate-100 px-2 py-1 text-xs font-mono font-semibold text-slate-700">status</code>
+                <div class="flex items-center gap-x-2">
+                  <span class="text-xs text-slate-400">active / completed / on_hold</span>
+                  <span class="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold text-red-600">required</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between py-2 border-b border-slate-50">
+                <code class="rounded-md bg-slate-100 px-2 py-1 text-xs font-mono font-semibold text-slate-700">start_date</code>
+                <div class="flex items-center gap-x-2">
+                  <span class="text-xs text-slate-400">YYYY-MM-DD</span>
+                  <span class="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold text-red-600">required</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between py-2 border-b border-slate-50">
+                <code class="rounded-md bg-slate-100 px-2 py-1 text-xs font-mono font-semibold text-slate-700">end_date</code>
+                <div class="flex items-center gap-x-2">
+                  <span class="text-xs text-slate-400">YYYY-MM-DD</span>
+                  <span class="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold text-red-600">required</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between py-2 border-b border-slate-50">
+                <code class="rounded-md bg-slate-100 px-2 py-1 text-xs font-mono font-semibold text-slate-700">required_skills</code>
+                <div class="flex items-center gap-x-2">
+                  <span class="text-xs text-slate-400">semicolon-separated</span>
+                  <span class="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold text-red-600">required</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between py-2 border-b border-slate-50">
+                <code class="rounded-md bg-slate-100 px-2 py-1 text-xs font-mono font-semibold text-slate-700">required_level</code>
+                <div class="flex items-center gap-x-2">
+                  <span class="text-xs text-slate-400">junior / mid / senior / lead</span>
+                  <span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-500">optional</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between py-2 border-b border-slate-50">
+                <code class="rounded-md bg-slate-100 px-2 py-1 text-xs font-mono font-semibold text-slate-700">client</code>
+                <div class="flex items-center gap-x-2">
+                  <span class="text-xs text-slate-400">client or "Internal"</span>
+                  <span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-500">optional</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between py-2">
+                <code class="rounded-md bg-slate-100 px-2 py-1 text-xs font-mono font-semibold text-slate-700">allocation_slots</code>
+                <div class="flex items-center gap-x-2">
+                  <span class="text-xs text-slate-400">number e.g. 3</span>
+                  <span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-500">optional</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+</body>
+</html>

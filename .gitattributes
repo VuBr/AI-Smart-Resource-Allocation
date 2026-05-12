@@ -1,0 +1,6 @@
+# Keep repository text files normalized
+* text=auto
+
+# Ensure ignore rules keep LF across platforms
+.gitignore text eol=lf
+.gitattributes text eol=lf

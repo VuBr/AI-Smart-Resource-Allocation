@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In — ResourceAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300..900;1,14..32,300..900&display=swap" rel="stylesheet" />
+  <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','ui-sans-serif']}}}}</script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    [x-cloak]{display:none!important}
+    .brand-panel{background:linear-gradient(145deg,#1e1b4b 0%,#312e81 40%,#4338ca 100%)}
+    .feature-dot{width:6px;height:6px;border-radius:50%;background:rgba(165,180,252,0.6);display:inline-block}
+  </style>
+</head>
+<body class="font-sans antialiased" style="min-width:1280px">
+
+<div class="flex min-h-screen">
+
+  <!-- LEFT PANEL — Brand / Feature showcase -->
+  <div class="brand-panel relative hidden lg:flex lg:w-[55%] flex-col justify-between p-12 overflow-hidden">
+    <!-- Background decorations -->
+    <div class="pointer-events-none absolute inset-0 overflow-hidden">
+      <div class="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-indigo-400/10 blur-3xl"></div>
+      <div class="absolute top-1/2 -left-24 h-64 w-64 rounded-full bg-violet-500/10 blur-3xl"></div>
+      <div class="absolute -bottom-20 right-1/3 h-80 w-80 rounded-full bg-blue-500/10 blur-3xl"></div>
+      <!-- Grid pattern overlay -->
+      <div class="absolute inset-0 opacity-[0.03]" style="background-image:linear-gradient(rgba(255,255,255,1) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,1) 1px,transparent 1px);background-size:40px 40px"></div>
+    </div>
+
+    <!-- Logo -->
+    <div class="relative flex items-center gap-x-3">
+      <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 backdrop-blur-sm border border-white/10">
+        <svg class="h-6 w-6 text-indigo-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 19.5V21M12 3v1.5m0 15V21m3.75-18v1.5m0 15V21m-9-1.5h10.5a2.25 2.25 0 002.25-2.25V6.75a2.25 2.25 0 00-2.25-2.25H6.75A2.25 2.25 0 004.5 6.75v10.5a2.25 2.25 0 002.25 2.25zm.75-12h9v9h-9v-9z" />
+        </svg>
+      </div>
+      <div>
+        <p class="text-lg font-bold text-white tracking-tight">ResourceAI</p>
+        <p class="text-xs text-indigo-300/80 font-medium">Enterprise Platform</p>
+      </div>
+    </div>
+
+    <!-- Hero text -->
+    <div class="relative">
+      <div class="mb-4 inline-flex items-center gap-x-2 rounded-full border border-indigo-400/30 bg-indigo-400/10 px-3 py-1.5 backdrop-blur-sm">
+        <span class="feature-dot"></span>
+        <span class="text-xs font-semibold text-indigo-300 tracking-wide uppercase">AI-Powered Workforce Intelligence</span>
+      </div>
+      <h1 class="mt-4 text-4xl font-black text-white leading-tight tracking-tight">
+        Intelligent Resource<br />
+        <span class="text-transparent bg-clip-text" style="background:linear-gradient(135deg,#a5b4fc,#c084fc)">Allocation at Scale</span>
+      </h1>
+      <p class="mt-5 text-base text-indigo-200/70 leading-relaxed max-w-md">
+        Predict bench periods with 89% accuracy, automate engineer matching, and eliminate staffing gaps before they become project risks.
+      </p>
+
+      <!-- Stats row -->
+      <div class="mt-10 grid grid-cols-3 gap-4">
+        <div class="rounded-xl border border-white/10 bg-white/5 px-4 py-4 backdrop-blur-sm">
+          <p class="text-2xl font-bold text-white tabular-nums">89%</p>
+          <p class="mt-1 text-xs text-indigo-300/70 leading-tight">Forecast accuracy</p>
+        </div>
+        <div class="rounded-xl border border-white/10 bg-white/5 px-4 py-4 backdrop-blur-sm">
+          <p class="text-2xl font-bold text-white tabular-nums">3×</p>
+          <p class="mt-1 text-xs text-indigo-300/70 leading-tight">Faster allocation</p>
+        </div>
+        <div class="rounded-xl border border-white/10 bg-white/5 px-4 py-4 backdrop-blur-sm">
+          <p class="text-2xl font-bold text-white tabular-nums">-40%</p>
+          <p class="mt-1 text-xs text-indigo-300/70 leading-tight">Bench time reduced</p>
+        </div>
+      </div>
+
+      <!-- Feature list -->
+      <div class="mt-8 space-y-3">
+        <div class="flex items-center gap-x-3">
+          <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-400/20">
+            <svg class="h-3.5 w-3.5 text-emerald-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+          </div>
+          <p class="text-sm text-indigo-200/80">AI-driven bench prediction with risk scoring</p>
+        </div>
+        <div class="flex items-center gap-x-3">
+          <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-400/20">
+            <svg class="h-3.5 w-3.5 text-emerald-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+          </div>
+          <p class="text-sm text-indigo-200/80">Smart skill-matching across projects and teams</p>
+        </div>
+        <div class="flex items-center gap-x-3">
+          <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-400/20">
+            <svg class="h-3.5 w-3.5 text-emerald-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+          </div>
+          <p class="text-sm text-indigo-200/80">Real-time shortage reports and workforce analytics</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="relative">
+      <p class="text-xs text-indigo-300/40">© 2025 ResourceAI · Enterprise Edition · v2.4.0</p>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL — Login form -->
+  <div class="flex flex-1 flex-col justify-center bg-slate-50 px-8 py-12 sm:px-16 lg:px-20">
+    <div class="mx-auto w-full max-w-sm" x-data="{ showError: true, loading: false, showPwd: false }">
+
+      <!-- Mobile logo (hidden on desktop) -->
+      <div class="mb-8 flex items-center gap-x-3 lg:hidden">
+        <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600">
+          <svg class="h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 19.5V21M12 3v1.5m0 15V21m3.75-18v1.5m0 15V21m-9-1.5h10.5a2.25 2.25 0 002.25-2.25V6.75a2.25 2.25 0 00-2.25-2.25H6.75A2.25 2.25 0 004.5 6.75v10.5a2.25 2.25 0 002.25 2.25zm.75-12h9v9h-9v-9z" /></svg>
+        </div>
+        <p class="text-base font-bold text-slate-900">ResourceAI</p>
+      </div>
+
+      <!-- Heading -->
+      <div class="mb-8">
+        <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Welcome back</h2>
+        <p class="mt-2 text-sm text-slate-500">Sign in to your ResourceAI account to continue.</p>
+      </div>
+
+      <!-- Error alert -->
+      <div x-show="showError"
+           class="mb-6 flex items-start gap-x-3 rounded-xl border border-red-200 bg-red-50 p-4">
+        <div class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-100 mt-0.5">
+          <svg class="h-3 w-3 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" /></svg>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-semibold text-red-900">Authentication failed</p>
+          <p class="mt-0.5 text-xs text-red-700">The email or password you entered is incorrect. Please try again.</p>
+        </div>
+        <button @click="showError=false" class="shrink-0 text-red-400 hover:text-red-600 transition-colors">
+          <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+        </button>
+      </div>
+
+      <!-- Form -->
+      <form class="space-y-5" @submit.prevent="loading = true">
+        <!-- Email -->
+        <div>
+          <label class="mb-1.5 block text-sm font-semibold text-slate-700">Email address</label>
+          <div class="relative">
+            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
+              <svg class="h-4 w-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" /></svg>
+            </div>
+            <input type="email" value="john.doe@company.com"
+              class="w-full rounded-xl border border-slate-300 bg-white py-3 pl-10 pr-4 text-sm text-slate-900 placeholder:text-slate-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-shadow" />
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div>
+          <div class="mb-1.5 flex items-center justify-between">
+            <label class="text-sm font-semibold text-slate-700">Password</label>
+            <a href="#" class="text-xs font-medium text-indigo-600 hover:text-indigo-700 transition-colors">Forgot password?</a>
+          </div>
+          <div class="relative">
+            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
+              <svg class="h-4 w-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
+            </div>
+            <input :type="showPwd ? 'text' : 'password'" value="••••••••••"
+              class="w-full rounded-xl border border-red-300 bg-red-50/30 py-3 pl-10 pr-11 text-sm text-slate-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-shadow" />
+            <button type="button" @click="showPwd = !showPwd" class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400 hover:text-slate-600 transition-colors">
+              <svg x-show="!showPwd" class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+            </button>
+          </div>
+          <p class="mt-1.5 flex items-center gap-x-1.5 text-xs text-red-600">
+            <svg class="h-3.5 w-3.5 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" /></svg>
+            Incorrect password. Please try again.
+          </p>
+        </div>
+
+        <!-- Remember me -->
+        <div class="flex items-center justify-between">
+          <label class="flex items-center gap-x-2.5 cursor-pointer">
+            <input type="checkbox" checked class="h-4 w-4 rounded border-slate-300 text-indigo-600 shadow-sm focus:ring-indigo-500 focus:ring-offset-0" />
+            <span class="text-sm text-slate-600">Keep me signed in</span>
+          </label>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit"
+          :disabled="loading"
+          class="mt-2 flex w-full items-center justify-center gap-x-2.5 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-md shadow-indigo-500/25 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all active:scale-[0.98]"
+          :class="loading && 'opacity-80 cursor-not-allowed'">
+          <svg x-show="loading" class="h-4 w-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+          </svg>
+          <span x-text="loading ? 'Signing in...' : 'Sign in to ResourceAI'">Sign in to ResourceAI</span>
+        </button>
+      </form>
+
+      <!-- Footer -->
+      <div class="mt-8 border-t border-slate-200 pt-6">
+        <p class="text-center text-xs text-slate-400">Protected by enterprise SSO · <a href="#" class="text-indigo-500 hover:underline">Privacy Policy</a></p>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
